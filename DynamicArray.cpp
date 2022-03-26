@@ -60,18 +60,15 @@ public:
 
     DynamicArray<T>& operator=(DynamicArray<T>&& other) noexcept
     {
-        if (this != &other)
-        {
-            delete[] m_Data;
-            m_Size = other.m_Size;
-            m_Data = other.m_Data;
+        delete[] m_Data;
+        m_Size = other.m_Size;
+        m_Data = other.m_Data;
 
-            other.m_Data = nullptr;
-        }
+        other.m_Data = nullptr;
         return *this;
     }
 
-    const T& get(int index)
+    const T& get(int index) const
     {
         if (index < 0 || index >= m_Size)
             throw std::runtime_error("Index out of range\n");
@@ -85,7 +82,7 @@ public:
         m_Data[index] = value;
     }
 
-    int getSize(){ return m_Size; }
+    int getSize() const { return m_Size; }
 
     void resize(int new_Size)
     {
@@ -101,7 +98,7 @@ public:
     T* begin(){ return m_Data; }
     T* end(){ return &m_Data[m_Size]; }
 
-    void print()
+    void print() const
     {
         for (int i = 0; i < m_Size; i++)
             std::cout << m_Data[i] << ' ';
