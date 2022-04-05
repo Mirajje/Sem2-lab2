@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/Вова/Documents/GitHub/Sem2-lab2/main.cpp" "C:/Users/Вова/Documents/GitHub/Sem2-lab2/cmake-build-debug/CMakeFiles/lab2.dir/main.cpp.obj"
+  "C:/Users/Вова/Documents/GitHub/Sem2-lab2/main.cpp" "C:/Users/Вова/Documents/GitHub/Sem2-lab2/cmake-build-debug/CMakeFiles/Sem2-lab2.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
