@@ -1,6 +1,6 @@
 #include <iostream>
 
-template <typename T>
+template <class T>
 class DynamicArray{
 private:
     T* m_Data = nullptr;
@@ -43,6 +43,7 @@ public:
         printf("Array destructor has been called\n");
     }
 
+public:
     T& operator[](int index)
     {
         if (index < 0 || index >= m_Size)
@@ -72,6 +73,7 @@ public:
         return *this;
     }
 
+public:
     const T& get(int index) const
     {
         if (index < 0 || index >= m_Size)
@@ -101,6 +103,25 @@ public:
 
     T* begin(){ return m_Data; }
     T* end(){ return &m_Data[m_Size]; }
+
+    T pop(int index)
+    {
+        if (index >= m_Size || index < 0)
+            throw std::runtime_error("Index out of range\n");
+
+        T ans = m_Data[index];
+
+        DynamicArray<T> result(m_Size - 1);
+
+        for (int i = 0; i < m_Size - 1; i++)
+            if (i < index)
+                result[i] = m_Data[i];
+            else
+                result[i] = m_Data[i + 1];
+
+        *this = result;
+        return ans;
+    }
 
     void print(int count) const
     {

@@ -1,37 +1,19 @@
 #include <algorithm>
-#include "ListSequence.hpp"
-#include "ArraySequence.hpp"
-
-template <typename T>
-void printSequence(Sequence<T>* seq)
-{
-    seq->print();
-}
+#include "Sequence.h"
 
 int main()
 {
-    int items[5] = {5, 4, 3, 2, 1};
-    int items2[3] = {3, 2, 1};
+    std::string items[5] = {"123", "13", "123", "13", "12"};
+    std::string items2[3] = {"12", "23", "23"};
 
-    DynamicArray<int> temp(items2, 3);
 
-    ArraySequence<int> array3(temp);
-    ListSequence<int> array(items, 5);
-    //ArraySequence<int> array2(array);
-    array[3] += 15;
-    ListSequence<int> list(items, 5);
-    array.print();
-    //array2.print();
-    array3.print();
+    ListSequence<std::string> list1(items, 5);
+    ListSequence<std::string> list2(items2, 3);
+    list1.print();
 
-    array.print();
-    Sequence<int>* seq = array.getSubSequence(0, 4);
-    seq = seq->getSubSequence(0, 4);
-    std::cout << array.get(2) << array.getFirst() << array.getLast() << array.getLength() << std::endl;
-    seq->print();
-
-    seq->insertAt(147, 2);
-    seq->append(-5);
-    seq->prepend(7);
+    Sequence<std::string>* seq = list1.concat(&list2);
+    Sequence<std::string>* seq2 = seq->getSubSequence(0, 3);
+    std::cout << seq->pop(6) << std::endl;
+    seq2->print();
     seq->print();
 }

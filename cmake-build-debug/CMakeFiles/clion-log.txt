@@ -1,4 +1,4 @@
-"Z:\CLion 2021.2.3\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - MinGW Makefiles" C:\Users\Вова\Documents\GitHub\Sem2-lab2
+"Z:\CLion 2021.2.3\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - MinGW Makefiles" Z:\Mephi\labs\lab2
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/Users/Р’РѕРІР°/Documents/GitHub/Sem2-lab2/cmake-build-debug
+-- Build files have been written to: Z:/Mephi/labs/lab2/cmake-build-debug

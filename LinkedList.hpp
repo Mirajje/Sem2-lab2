@@ -1,6 +1,6 @@
 #include <iostream>
 
-template<typename T>
+template<class T>
 struct Node
 {
     T value;
@@ -93,6 +93,7 @@ public:
         printf("List destructor has been called\n");
     }
 
+public:
     T& operator[](int index)
     {
         if (index < 0 || index >= m_Size)
@@ -175,6 +176,7 @@ public:
         return *this;
     }
 
+public:
     int getSize() const { return m_Size; }
 
     const T& get(int index) const
@@ -336,21 +338,16 @@ public:
     }
 
     LinkedList<T>* concat(LinkedList<T>* other){
-        if (m_Tail == nullptr)
+        if (other == nullptr)
             throw std::runtime_error("Null pointer error\n");
 
-        Node<T>* current = m_Tail;
-        for (int i = 0; i < other->m_Size; i++)
-        {
-            current->next = new Node<T>;
-            current->next->prev = current;
-            current = current->next;
-            current->value = other->get(i);
-            current->next = nullptr;
-        }
-        m_Tail = current;
-        m_Size += other->m_Size;
-        return this;
+        auto* resultList = new LinkedList<T>;
+        *resultList = *this;
+
+        for (int i = 0; i < other->getSize(); i++)
+            resultList->append((*other)[i]);
+
+        return resultList;
     }
 
     void print() const

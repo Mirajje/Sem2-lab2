@@ -1,7 +1,7 @@
 #include "LinkedList.hpp"
 #include "Sequence.hpp"
 
-template <typename T>
+template <class T>
 class ListSequence : public Sequence<T>
 {
 private:
@@ -33,37 +33,40 @@ public:
         delete m_list;
     }
 
-    T get(int index)
+public:
+    T get(int index) const
     {
         return m_list->get(index);
     }
 
-    T getFirst()
+    T getFirst() const
     {
         return m_list->getFirst();
     }
 
-    T getLast()
+    T getLast() const
     {
         return m_list->getLast();
     }
 
-    int getLength()
+    int getLength() const
     {
         return m_list->getSize();
     }
 
+public:
     T& operator[](int index)
     {
         return (*m_list)[index];
     }
 
+public:
     void set(T item, int index)
     {
         (*m_list)[index] = item;
     }
 
-    Sequence<T>* getSubSequence(int startIndex, int endIndex)
+    Sequence<T>* getSubSequence(int startIndex, int endIndex) const
     {
         auto* res = new ListSequence<T>(*m_list->getSubList(startIndex, endIndex));
         return res;
@@ -84,19 +87,26 @@ public:
         m_list->prepend(item);
     }
 
-    /*Sequence<T>* concat(Sequence<T>* other)
+    Sequence<T>* concat(Sequence<T>* other) const
     {
         if (other == nullptr)
             throw std::runtime_error("Null pointer error\n");
 
-        for (int i = 0; i < other->getLength(); i++)
-        {
-            m_list->append(other->get(i));
-        }
-        return this;
-    }*/
+        auto* resultList = new ListSequence<T>;
+        *(resultList->m_list) = *(m_list);
 
-    void print()
+        for (int i = 0; i < other->getLength(); i++)
+            resultList->append((*other)[i]);
+
+        return resultList;
+    }
+
+    T pop(int index)
+    {
+        return m_list->pop(index);
+    }
+
+    void print() const
     {
         m_list->print();
     }
