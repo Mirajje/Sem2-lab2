@@ -27,14 +27,18 @@ public:
 
         m_Size = count;
         m_Data = new T[m_Size];
-        memcpy(m_Data, items, m_Size * sizeof(T));
+
+        for (int i = 0; i < count; i++)
+            m_Data[i] = items[i];
     }
 
     DynamicArray(const DynamicArray<T>& dynamicArray)
     {
         m_Size = dynamicArray.m_Size;
         m_Data = new T[m_Size];
-        memcpy(m_Data, dynamicArray.m_Data, m_Size * sizeof(T));
+
+        for (int i = 0; i < m_Size; i++)
+            m_Data[i] = dynamicArray.m_Data[i];
     }
 
     ~DynamicArray()
@@ -58,7 +62,8 @@ public:
             delete[] m_Data;
             m_Size = other.m_Size;
             m_Data = new T[m_Size];
-            memcpy(m_Data, other.m_Data, sizeof(T) * m_Size);
+            for (int i = 0; i < m_Size; i++)
+                m_Data[i] = other.m_Data[i];
         }
         return *this;
     }
@@ -81,6 +86,8 @@ public:
         return m_Data[index];
     }
 
+    int getSize() const { return m_Size; }
+
     void set(int index, const T& value)
     {
         if (index < 0 || index >= m_Size)
@@ -88,14 +95,15 @@ public:
         m_Data[index] = value;
     }
 
-    int getSize() const { return m_Size; }
-
     void resize(int new_Size)
     {
         if (new_Size < 0)
             throw std::runtime_error("Negative size error\n");
         T* new_Data = new T[new_Size]();
-        memcpy(new_Data, m_Data, sizeof(T) * std::min(new_Size, m_Size));
+
+        for (int i = 0; i < std::min(new_Size, m_Size); i++)
+            new_Data[i] = m_Data[i];
+
         delete[] m_Data;
         m_Data = new_Data;
         m_Size = new_Size;

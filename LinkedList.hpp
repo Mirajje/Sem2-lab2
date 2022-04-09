@@ -208,6 +208,26 @@ public:
         return m_Tail->value;
     }
 
+    int find(T item) const
+    {
+        if (m_Head != nullptr)
+        {
+            int index = 0;
+            Node<T>* current = m_Head;
+            while (current->next != nullptr)
+            {
+                if (current->value == item)
+                    return index;
+                current = current->next;
+                index += 1;
+            }
+
+            if (current->value == item)
+                return index;
+        }
+        return -1;
+    }
+
     T pop(int index)
     {
         if (index < 0 || index >= m_Size)

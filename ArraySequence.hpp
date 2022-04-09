@@ -15,6 +15,12 @@ public:
         m_count = 0;
     }
 
+    explicit ArraySequence(int count)
+    {
+        m_array = new DynamicArray<T>(count);
+        m_count = count;
+    }
+
     ArraySequence(T* items, int count)
     {
         m_array = new DynamicArray<T>(items, count);
@@ -36,15 +42,6 @@ public:
     ~ArraySequence()
     {
         delete m_array;
-    }
-
-public:
-    T& operator[](int index)
-    {
-        if (index < 0 || index >= m_count)
-            throw std::runtime_error("Index out of range\n");
-
-        return (*m_array)[index];
     }
 
 public:
@@ -77,6 +74,54 @@ public:
         return m_count;
     }
 
+    int find(const T& item) const
+    {
+        for (int i = 0; i < this->getLength(); i++)
+            if (this->get(i) == item)
+                return i;
+
+        return -1;
+    }
+
+public:
+    T& operator[](int index)
+    {
+        if (index < 0 || index >= m_count)
+            throw std::runtime_error("Index out of range\n");
+
+        return (*m_array)[index];
+    }
+
+    ArraySequence<T>& operator =(const Sequence<T>& other)
+    {
+        if (this != &other)
+        {
+            DynamicArray<T> result(other.getLength());
+            for (int i = 0; i < other.getLength(); i++)
+                result[i] = other.get(i);
+
+            *m_array = result;
+            m_count = other.getLength();
+        }
+        return *this;
+    }
+
+    bool operator ==(const Sequence<T>& other)
+    {
+        if (m_count == other.getLength())
+        {
+            bool flag = true;
+            for (int i = 0; i < m_count; i++)
+                if (this->get(i) != other.get(i))
+                    flag = false;
+
+            return flag;
+        }
+
+        return false;
+    }
+
+public:
     void set(T item, int index)
     {
         if (index < 0 || index >= m_count)
@@ -154,5 +199,35 @@ public:
     void print() const
     {
         m_array->print(m_count);
+    }
+
+public:
+    Sequence<T>* map(T func(const T&))
+    {
+        auto* result = new ArraySequence<T>(m_count);
+        for (int i = 0; i < m_count; i++)
+            (*result)[i] = func((*this)[i]);
+
+        return result;
+    }
+
+    virtual Sequence<T>* where(bool func(const T&))
+    {
+        int count = 0;
+        for (int i = 0; i < m_count; i++)
+            if (func(m_array->get(i)))
+                count += 1;
+
+        auto* result = new ArraySequence<T>(count);
+
+        int j = 0;
+        for (int i = 0; i < m_count; i++)
+            if (func(m_array->get(i)))
+            {
+                result->set(m_array->get(i), j);
+                j += 1;
+            }
+
+        return result;
     }
 };

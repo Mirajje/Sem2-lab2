@@ -1,2 +1,2 @@
-#include "DynamicArray.hpp"
+#include "ArraySequence.hpp"
 #include "ListSequence.hpp"

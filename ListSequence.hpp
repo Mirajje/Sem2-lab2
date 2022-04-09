@@ -54,10 +54,43 @@ public:
         return m_list->getSize();
     }
 
+    int find(const T& item) const
+    {
+        return m_list->find(item);
+    }
+
 public:
     T& operator[](int index)
     {
         return (*m_list)[index];
+    }
+
+    ListSequence<T>& operator =(const Sequence<T>& other)
+    {
+        if (this != &other)
+        {
+            delete m_list;
+
+            m_list = new LinkedList<T>;
+            for (int i = 0; i < other.getLength(); i++)
+                m_list->append(other.get(i));
+        }
+        return *this;
+    }
+
+    bool operator ==(const Sequence<T>& other)
+    {
+        if (m_list->getSize() == other.getLength())
+        {
+            bool flag = true;
+            for (int i = 0; i < m_list->getSize(); i++)
+                if (this->get(i) != other.get(i))
+                    flag = false;
+
+            return flag;
+        }
+
+        return false;
     }
 
 public:
@@ -109,5 +142,27 @@ public:
     void print() const
     {
         m_list->print();
+    }
+
+public:
+    Sequence<T>* map(T func(const T&))
+    {
+       auto* result = new ListSequence<T>;
+
+        for (int i = 0; i < this->getLength(); i++)
+            result->append(func(this->get(i)));
+
+        return result;
+    }
+
+    virtual Sequence<T>* where(bool func(const T&))
+    {
+        auto* result = new ListSequence<T>;
+
+        for (int i = 0; i < this->getLength(); i++)
+            if (func(this->get(i)))
+                result->append(this->get(i));
+
+        return result;
     }
 };
