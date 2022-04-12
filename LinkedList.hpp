@@ -18,6 +18,34 @@ private:
 public:
     LinkedList() = default;
 
+    LinkedList(int count)
+    {
+        if (count < 0)
+            throw std::runtime_error("Negative size error\n");
+
+        if (count > 0)
+            m_Head = new Node<T>;
+        Node<T> *current = m_Head;
+        Node<T> *previous = nullptr;
+
+        for (int i = 0; i < count; i++)
+        {
+            current->value = T();
+            current->prev = previous;
+            if (i != count - 1)
+            {
+                previous = current;
+                current->next = new Node<T>;
+                current = current->next;
+            }
+        }
+        if (current != nullptr){
+            m_Tail = current;
+            m_Tail->next = nullptr;
+        }
+        m_Size = count;
+    }
+
     LinkedList(T* items, int count)
     {
         if (items == nullptr)
@@ -90,7 +118,6 @@ public:
             }
             delete current;
         }
-        printf("List destructor has been called\n");
     }
 
 public:

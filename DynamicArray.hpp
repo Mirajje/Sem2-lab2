@@ -44,7 +44,6 @@ public:
     ~DynamicArray()
     {
         delete[] m_Data;
-        printf("Array destructor has been called\n");
     }
 
 public:

@@ -17,6 +17,7 @@ public:
     virtual int find(const T& item) const = 0; // returns index of the first occurrence; returns -1 if nothing was found
     virtual Sequence<T>* getSubSequence(int startIndex, int endIndex) const = 0;
     virtual int getLength() const = 0;
+    virtual void clear() = 0;
 
 public:
     virtual T& operator[](int index) = 0;

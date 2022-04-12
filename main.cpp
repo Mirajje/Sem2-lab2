@@ -1,24 +1,6 @@
 #include <algorithm>
 #include "Sequence.h"
 
-template <class T>
-T func(const T& s)
-{
-    return s + "ahaha";
-}
-
-template <class T>
-bool func2(const T& s)
-{
-    return (s > 1);
-}
-
-template <class T>
-T func3(const T& v1, const T& v2)
-{
-    return (2 * v1 + 3 * v2);
-}
-
 int main()
 {
     std::string items[5] = {"123", "13", "123", "13", "12"};

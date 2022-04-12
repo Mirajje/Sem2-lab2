@@ -13,6 +13,11 @@ public:
         m_List = new LinkedList<T>();
     }
 
+    explicit ListSequence(int count)
+    {
+        m_List = new LinkedList<T>(count);
+    }
+
     ListSequence(T* items, int count)
     {
         m_List = new LinkedList<T>(items, count);
@@ -26,6 +31,13 @@ public:
     ListSequence(const ListSequence<T>& other)
     {
         m_List = new LinkedList<T>(*other.m_List);
+    }
+
+    explicit ListSequence(const Sequence<T>& other)
+    {
+        m_List = new LinkedList<T>;
+        for (int i = 0; i < other.getLength(); i++)
+            m_List->append(other.get(i));
     }
 
     ~ListSequence()
@@ -57,6 +69,11 @@ public:
     int find(const T& item) const
     {
         return m_List->find(item);
+    }
+
+    void clear()
+    {
+        delete this;
     }
 
 public:

@@ -39,6 +39,14 @@ public:
         m_Count = other.m_Count;
     }
 
+    explicit ArraySequence(const Sequence<T>& other)
+    {
+        m_Array = new DynamicArray<T>(other.getLength());
+        for (int i = 0; i < other.getLength(); i++)
+            m_Array->set(i, other.get(i));
+        m_Count = other.getLength();
+    }
+
     ~ArraySequence()
     {
         delete m_Array;
@@ -81,6 +89,11 @@ public:
                 return i;
 
         return -1;
+    }
+
+    void clear()
+    {
+        delete this;
     }
 
 public:
@@ -149,7 +162,12 @@ public:
             throw std::runtime_error("Index out of range\n");
 
         if (m_Count == m_Array->getSize())
-            m_Array->resize(m_Array->getSize() * 2);
+        {
+            if (m_Count != 0)
+                m_Array->resize(m_Array->getSize() * 2);
+            else
+                m_Array->resize(m_Array->getSize() + 1);
+        }
         m_Count += 1;
 
         T prev = (*m_Array)[index]; T temp;
