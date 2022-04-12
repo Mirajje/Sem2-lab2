@@ -5,85 +5,85 @@ template <class T>
 class ListSequence : public Sequence<T>
 {
 private:
-    LinkedList<T>* m_list;
+    LinkedList<T>* m_List;
 
 public:
     ListSequence()
     {
-        m_list = new LinkedList<T>();
+        m_List = new LinkedList<T>();
     }
 
     ListSequence(T* items, int count)
     {
-        m_list = new LinkedList<T>(items, count);
+        m_List = new LinkedList<T>(items, count);
     }
 
     explicit ListSequence(const LinkedList<T>& other)
     {
-        m_list = new LinkedList<T>(other);
+        m_List = new LinkedList<T>(other);
     }
 
     ListSequence(const ListSequence<T>& other)
     {
-        m_list = new LinkedList<T>(*other.m_list);
+        m_List = new LinkedList<T>(*other.m_List);
     }
 
     ~ListSequence()
     {
-        delete m_list;
+        delete m_List;
     }
 
 public:
     T get(int index) const
     {
-        return m_list->get(index);
+        return m_List->get(index);
     }
 
     T getFirst() const
     {
-        return m_list->getFirst();
+        return m_List->getFirst();
     }
 
     T getLast() const
     {
-        return m_list->getLast();
+        return m_List->getLast();
     }
 
     int getLength() const
     {
-        return m_list->getSize();
+        return m_List->getSize();
     }
 
     int find(const T& item) const
     {
-        return m_list->find(item);
+        return m_List->find(item);
     }
 
 public:
     T& operator[](int index)
     {
-        return (*m_list)[index];
+        return (*m_List)[index];
     }
 
     ListSequence<T>& operator =(const Sequence<T>& other)
     {
         if (this != &other)
         {
-            delete m_list;
+            delete m_List;
 
-            m_list = new LinkedList<T>;
+            m_List = new LinkedList<T>;
             for (int i = 0; i < other.getLength(); i++)
-                m_list->append(other.get(i));
+                m_List->append(other.get(i));
         }
         return *this;
     }
 
-    bool operator ==(const Sequence<T>& other)
+    bool operator ==(const Sequence<T>& other) const
     {
-        if (m_list->getSize() == other.getLength())
+        if (m_List->getSize() == other.getLength())
         {
             bool flag = true;
-            for (int i = 0; i < m_list->getSize(); i++)
+            for (int i = 0; i < m_List->getSize(); i++)
                 if (this->get(i) != other.get(i))
                     flag = false;
 
@@ -96,28 +96,28 @@ public:
 public:
     void set(T item, int index)
     {
-        (*m_list)[index] = item;
+        (*m_List)[index] = item;
     }
 
     Sequence<T>* getSubSequence(int startIndex, int endIndex) const
     {
-        auto* res = new ListSequence<T>(*m_list->getSubList(startIndex, endIndex));
+        auto* res = new ListSequence<T>(*m_List->getSubList(startIndex, endIndex));
         return res;
     }
 
     void insertAt(T item, int index)
     {
-        m_list->insertAt(item, index);
+        m_List->insertAt(item, index);
     }
 
     void append(T item)
     {
-        m_list->append(item);
+        m_List->append(item);
     }
 
     void prepend(T item)
     {
-        m_list->prepend(item);
+        m_List->prepend(item);
     }
 
     Sequence<T>* concat(Sequence<T>* other) const
@@ -126,7 +126,7 @@ public:
             throw std::runtime_error("Null pointer error\n");
 
         auto* resultList = new ListSequence<T>;
-        *(resultList->m_list) = *(m_list);
+        *(resultList->m_List) = *(m_List);
 
         for (int i = 0; i < other->getLength(); i++)
             resultList->append((*other)[i]);
@@ -136,33 +136,27 @@ public:
 
     T pop(int index)
     {
-        return m_list->pop(index);
+        return m_List->pop(index);
     }
 
     void print() const
     {
-        m_list->print();
+        m_List->print();
     }
 
 public:
-    Sequence<T>* map(T func(const T&))
+    Sequence<T>* map(T func(const T&)) const
     {
-       auto* result = new ListSequence<T>;
-
-        for (int i = 0; i < this->getLength(); i++)
-            result->append(func(this->get(i)));
-
-        return result;
+        return new ListSequence<T>(*(m_List->map(func)));
     }
 
-    virtual Sequence<T>* where(bool func(const T&))
+    Sequence<T>* where(bool func(const T&)) const
     {
-        auto* result = new ListSequence<T>;
+        return new ListSequence<T>(*(m_List->where(func)));
+    }
 
-        for (int i = 0; i < this->getLength(); i++)
-            if (func(this->get(i)))
-                result->append(this->get(i));
-
-        return result;
+    T reduce(T func(const T&, const T&), T startValue) const
+    {
+        return m_List->reduce(func, startValue);
     }
 };

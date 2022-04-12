@@ -391,4 +391,47 @@ public:
         }
         std::cout << std::endl;
     }
+
+    LinkedList<T>* map(T func(const T&)) const
+    {
+        auto* result = new LinkedList<T>;
+
+        Node<T>* current = m_Head;
+        for (int i = 0; i < m_Size; i++)
+        {
+            result->append(func(current->value));
+            current = current->next;
+        }
+
+        return result;
+    }
+
+    LinkedList<T>* where(bool func(const T&)) const
+    {
+        auto* result = new LinkedList<T>;
+
+        Node<T>* current = m_Head;
+        for (int i = 0; i < m_Size; i++)
+        {
+            if (func(current->value))
+                result->append(current->value);
+            current = current->next;
+        }
+
+        return result;
+    }
+
+    T reduce(T func(const T&, const T&), T startValue) const
+    {
+        T result = startValue;
+
+        Node<T>* current = m_Head;
+        for (int i = 0; i < m_Size; i++)
+        {
+            result = func(current->value, result);
+            current = current->next;
+        }
+        return result;
+    }
+
 };

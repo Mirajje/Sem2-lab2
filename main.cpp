@@ -4,29 +4,34 @@
 template <class T>
 T func(const T& s)
 {
-    return s + T();
+    return s + "ahaha";
 }
 
 template <class T>
 bool func2(const T& s)
 {
-    return s.size() > 3;
+    return (s > 1);
 }
 
+template <class T>
+T func3(const T& v1, const T& v2)
+{
+    return (2 * v1 + 3 * v2);
+}
 
 int main()
 {
     std::string items[5] = {"123", "13", "123", "13", "12"};
     std::string items2[3] = {"12", "23", "23"};
 
-    ListSequence<std::string> array1(items, 5);
+    ArraySequence<std::string> array1(items, 5);
     ListSequence<std::string> array2(items2, 3);
 
 
     Sequence<std::string>* seq = array1.concat(&array2);
     seq->append("abobina");
     seq->print();
-    Sequence<std::string>* seq2 = new ListSequence<std::string>();
+    Sequence<std::string>* seq2 = new ArraySequence<std::string>();
 
     *seq2 = *seq;
     seq2->append("131312312321");
@@ -61,6 +66,9 @@ int main()
     seq2 = seq2->map(func);
     seq2->print();
 
-    seq2 = seq2->where(func2);
-    seq2->print();
+    int items5[5] = {1, 2, 3};
+    Sequence<int>* new_seq = new ArraySequence<int>(items5, 3);
+
+    std::cout << new_seq->where(func2) << std::endl;
+    std::cout << *new_seq->where(func2) << std::endl;
 }

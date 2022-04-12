@@ -5,73 +5,73 @@ template <class T>
 class ArraySequence : public Sequence<T>
 {
 private:
-    DynamicArray<T>* m_array;
-    int m_count;
+    DynamicArray<T>* m_Array;
+    int m_Count;
 
 public:
     ArraySequence()
     {
-        m_array = new DynamicArray<T>();
-        m_count = 0;
+        m_Array = new DynamicArray<T>();
+        m_Count = 0;
     }
 
     explicit ArraySequence(int count)
     {
-        m_array = new DynamicArray<T>(count);
-        m_count = count;
+        m_Array = new DynamicArray<T>(count);
+        m_Count = count;
     }
 
     ArraySequence(T* items, int count)
     {
-        m_array = new DynamicArray<T>(items, count);
-        m_count = count;
+        m_Array = new DynamicArray<T>(items, count);
+        m_Count = count;
     }
 
     explicit ArraySequence(const DynamicArray<T>& other)
     {
-        m_array = new DynamicArray<T>(other);
-        m_count = other.getSize();
+        m_Array = new DynamicArray<T>(other);
+        m_Count = other.getSize();
     }
 
     ArraySequence(const ArraySequence<T>& other)
     {
-        m_array = new DynamicArray<T>(*other.m_array);
-        m_count = other.m_count;
+        m_Array = new DynamicArray<T>(*other.m_Array);
+        m_Count = other.m_Count;
     }
 
     ~ArraySequence()
     {
-        delete m_array;
+        delete m_Array;
     }
 
 public:
     T get(int index) const
     {
-        if (index < 0 || index >= m_count)
+        if (index < 0 || index >= m_Count)
             throw std::runtime_error("Index out of range\n");
 
-        return m_array->get(index);
+        return m_Array->get(index);
     }
 
     T getFirst() const
     {
-        if (m_count == 0)
+        if (m_Count == 0)
             throw std::runtime_error("Index out of range\n");
 
-        return m_array->get(0);
+        return m_Array->get(0);
     }
 
     T getLast() const
     {
-        if (m_count == 0)
+        if (m_Count == 0)
             throw std::runtime_error("Index out of range\n");
 
-        return m_array->get(m_count - 1);
+        return m_Array->get(m_Count - 1);
     }
 
     int getLength() const
     {
-        return m_count;
+        return m_Count;
     }
 
     int find(const T& item) const
@@ -86,10 +86,10 @@ public:
 public:
     T& operator[](int index)
     {
-        if (index < 0 || index >= m_count)
+        if (index < 0 || index >= m_Count)
             throw std::runtime_error("Index out of range\n");
 
-        return (*m_array)[index];
+        return (*m_Array)[index];
     }
 
     ArraySequence<T>& operator =(const Sequence<T>& other)
@@ -100,18 +100,18 @@ public:
             for (int i = 0; i < other.getLength(); i++)
                 result[i] = other.get(i);
 
-            *m_array = result;
-            m_count = other.getLength();
+            *m_Array = result;
+            m_Count = other.getLength();
         }
         return *this;
     }
 
-    bool operator ==(const Sequence<T>& other)
+    bool operator ==(const Sequence<T>& other) const
     {
-        if (m_count == other.getLength())
+        if (m_Count == other.getLength())
         {
             bool flag = true;
-            for (int i = 0; i < m_count; i++)
+            for (int i = 0; i < m_Count; i++)
                 if (this->get(i) != other.get(i))
                     flag = false;
 
@@ -124,20 +124,20 @@ public:
 public:
     void set(T item, int index)
     {
-        if (index < 0 || index >= m_count)
+        if (index < 0 || index >= m_Count)
             throw std::runtime_error("Index out of range\n");
 
-        (*m_array)[index] = item;
+        (*m_Array)[index] = item;
     }
 
     Sequence<T>* getSubSequence(int startIndex, int endIndex) const
     {
-        if (startIndex > endIndex || startIndex < 0 || endIndex >= m_count)
+        if (startIndex > endIndex || startIndex < 0 || endIndex >= m_Count)
             throw std::runtime_error("Index out of range\n");
 
         DynamicArray<T> temp(endIndex - startIndex + 1);
         for (int i = startIndex; i < endIndex + 1; i++)
-            temp[i - startIndex] = (*m_array)[i];
+            temp[i - startIndex] = (*m_Array)[i];
 
         Sequence<T>* res = new ArraySequence<T>(temp);
         return res;
@@ -145,26 +145,26 @@ public:
 
     void insertAt(T item, int index)
     {
-        if (index < 0 || index > m_count)
+        if (index < 0 || index > m_Count)
             throw std::runtime_error("Index out of range\n");
 
-        if (m_count == m_array->getSize())
-            m_array->resize(m_array->getSize() * 2);
-        m_count += 1;
+        if (m_Count == m_Array->getSize())
+            m_Array->resize(m_Array->getSize() * 2);
+        m_Count += 1;
 
-        T prev = (*m_array)[index]; T temp;
-        for (int i = index + 1; i < m_count; i++)
+        T prev = (*m_Array)[index]; T temp;
+        for (int i = index + 1; i < m_Count; i++)
         {
-            temp = (*m_array)[i];
-            (*m_array)[i] = prev;
+            temp = (*m_Array)[i];
+            (*m_Array)[i] = prev;
             prev = temp;
         }
-        (*m_array)[index] = item;
+        (*m_Array)[index] = item;
     }
 
     void append(T item)
     {
-        this->insertAt(item, m_count);
+        this->insertAt(item, m_Count);
     }
 
     void prepend(T item)
@@ -178,8 +178,8 @@ public:
             throw std::runtime_error("Null pointer error\n");
 
         auto* resultArray = new ArraySequence<T>;
-        *(resultArray->m_array) = *(m_array);
-        resultArray->m_count = m_count;
+        *(resultArray->m_Array) = *(m_Array);
+        resultArray->m_Count = m_Count;
 
         for (int i = 0; i < other->getLength(); i++)
             resultArray->append((*other)[i]);
@@ -189,45 +189,55 @@ public:
 
     T pop(int index)
     {
-        if (index >= m_count || index < 0)
+        if (index >= m_Count || index < 0)
             throw std::runtime_error("Index out of range\n");
 
-        m_count -= 1;
-        return m_array->pop(index);
+        m_Count -= 1;
+        return m_Array->pop(index);
     }
 
     void print() const
     {
-        m_array->print(m_count);
+        m_Array->print(m_Count);
     }
 
 public:
-    Sequence<T>* map(T func(const T&))
+    Sequence<T>* map(T func(const T&)) const
     {
-        auto* result = new ArraySequence<T>(m_count);
-        for (int i = 0; i < m_count; i++)
-            (*result)[i] = func((*this)[i]);
+        auto* result = new ArraySequence<T>(m_Count);
+        for (int i = 0; i < m_Count; i++)
+            (*result)[i] = func(m_Array->get(i));
 
         return result;
     }
 
-    virtual Sequence<T>* where(bool func(const T&))
+    Sequence<T>* where(bool func(const T&)) const
     {
         int count = 0;
-        for (int i = 0; i < m_count; i++)
-            if (func(m_array->get(i)))
+        for (int i = 0; i < m_Count; i++)
+            if (func(m_Array->get(i)))
                 count += 1;
 
         auto* result = new ArraySequence<T>(count);
 
         int j = 0;
-        for (int i = 0; i < m_count; i++)
-            if (func(m_array->get(i)))
+        for (int i = 0; i < m_Count; i++)
+            if (func(m_Array->get(i)))
             {
-                result->set(m_array->get(i), j);
+                result->set(m_Array->get(i), j);
                 j += 1;
             }
 
+        return result;
+    }
+
+    T reduce(T func(const T&, const T&), T startValue) const
+    {
+        T result = startValue;
+        for (int i = 0; i < m_Count; i++)
+        {
+            result = func(m_Array->get(i), result);
+        }
         return result;
     }
 };
