@@ -1,3 +1,0 @@
-Z:/Mephi/labs/lab2/PlayGround/cmake-build-debug/CMakeFiles/PlayGround.dir
-Z:/Mephi/labs/lab2/PlayGround/cmake-build-debug/CMakeFiles/edit_cache.dir
-Z:/Mephi/labs/lab2/PlayGround/cmake-build-debug/CMakeFiles/rebuild_cache.dir
