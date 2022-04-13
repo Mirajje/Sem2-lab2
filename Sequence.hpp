@@ -1,7 +1,7 @@
 #include <iostream>
 
-#ifndef H_SEQUENCE
-#define H_SEQUENCE
+#ifndef HPP_SEQUENCE
+#define HPP_SEQUENCE
 
 template <class T> class Sequence;
 template <class T> std::ostream& operator<<(std::ostream& out, Sequence<T>* seq);

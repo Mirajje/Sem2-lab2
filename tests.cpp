@@ -18,7 +18,7 @@ T func3(const T& v1, const T& v2)
     return (v1 + v2);
 }
 
-int main()
+void tests()
 {
     // ListSequence test ===================================================================================================
 
@@ -308,6 +308,7 @@ int main()
     for (int i = 0; i < seq1->getLength(); i++)
         result = seq1->get(i) + result;
 
+    seq1->print();
     if (seq1->reduce(func3, "") == result)
         std::cout << "reduce test successfully passed!\n";
     else
