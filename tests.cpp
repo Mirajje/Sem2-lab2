@@ -1,4 +1,4 @@
-#include "Sequence.h"
+#include "Sequence_lib.h"
 
 template <class T>
 T func1(const T& s)

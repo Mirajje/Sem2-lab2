@@ -1,5 +1,5 @@
 #include "LinkedList.hpp"
-#include "Sequence.hpp"
+#include "Sequence.h"
 
 template <class T>
 class ListSequence : public Sequence<T>
@@ -8,172 +8,232 @@ private:
     LinkedList<T>* m_List;
 
 public:
-    ListSequence()
-    {
-        m_List = new LinkedList<T>();
-    }
+    ListSequence();
+    explicit ListSequence(int count);
+    ListSequence(T* items, int count);
+    explicit ListSequence(const LinkedList<T>& other);
+    ListSequence(const ListSequence<T>& other);
+    explicit ListSequence(const Sequence<T>& other);
+    ~ListSequence();
 
-    explicit ListSequence(int count)
-    {
-        m_List = new LinkedList<T>(count);
-    }
+public:
+    T get(int index) const;
+    T getFirst() const;
+    T getLast() const;
+    int getLength() const;
+    int find(const T& item) const;
+    void clear();
 
-    ListSequence(T* items, int count)
-    {
-        m_List = new LinkedList<T>(items, count);
-    }
+public:
+    T& operator[](int index);
+    ListSequence<T>& operator =(const Sequence<T>& other);
+    bool operator ==(const Sequence<T>& other) const;
 
-    explicit ListSequence(const LinkedList<T>& other)
-    {
-        m_List = new LinkedList<T>(other);
-    }
+public:
+    void set(T item, int index);
+    Sequence<T>* getSubSequence(int startIndex, int endIndex) const;
+    void insertAt(T item, int index);
+    void append(T item);
+    void prepend(T item);
+    Sequence<T>* concat(Sequence<T>* other) const;
+    T pop(int index);
+    void print() const;
 
-    ListSequence(const ListSequence<T>& other)
-    {
-        m_List = new LinkedList<T>(*other.m_List);
-    }
+public:
+    Sequence<T>* map(T func(const T&)) const;
+    Sequence<T>* where(bool func(const T&)) const;
+    T reduce(T func(const T&, const T&), T startValue) const;
 
-    explicit ListSequence(const Sequence<T>& other)
+};
+
+template <class T>
+ListSequence<T>::ListSequence()
+{
+    m_List = new LinkedList<T>();
+}
+
+template <class T>
+ListSequence<T>::ListSequence(int count)
+{
+    m_List = new LinkedList<T>(count);
+}
+
+template <class T>
+ListSequence<T>::ListSequence(T* items, int count)
+{
+    m_List = new LinkedList<T>(items, count);
+}
+
+template <class T>
+ListSequence<T>::ListSequence(const LinkedList<T>& other)
+{
+    m_List = new LinkedList<T>(other);
+}
+
+template <class T>
+ListSequence<T>::ListSequence(const ListSequence<T>& other)
+{
+    m_List = new LinkedList<T>(*other.m_List);
+}
+
+template <class T>
+ListSequence<T>::ListSequence(const Sequence<T>& other)
+{
+    m_List = new LinkedList<T>;
+    for (int i = 0; i < other.getLength(); i++)
+        m_List->append(other.get(i));
+}
+
+template <class T>
+ListSequence<T>::~ListSequence()
+{
+    delete m_List;
+}
+
+template <class T>
+T ListSequence<T>::get(int index) const
+{
+    return m_List->get(index);
+}
+
+template <class T>
+T ListSequence<T>::getFirst() const
+{
+    return m_List->getFirst();
+}
+
+template <class T>
+T ListSequence<T>::getLast() const
+{
+    return m_List->getLast();
+}
+
+template <class T>
+int ListSequence<T>::getLength() const
+{
+    return m_List->getSize();
+}
+
+template <class T>
+int ListSequence<T>::find(const T& item) const
+{
+    return m_List->find(item);
+}
+
+template <class T>
+void ListSequence<T>::clear()
+{
+    delete this;
+}
+
+template <class T>
+T& ListSequence<T>::operator[](int index)
+{
+    return (*m_List)[index];
+}
+
+template <class T>
+ListSequence<T>& ListSequence<T>::operator =(const Sequence<T>& other)
+{
+    if (this != &other)
     {
+        delete m_List;
+
         m_List = new LinkedList<T>;
         for (int i = 0; i < other.getLength(); i++)
             m_List->append(other.get(i));
     }
+    return *this;
+}
 
-    ~ListSequence()
+template <class T>
+bool ListSequence<T>::operator ==(const Sequence<T>& other) const
+{
+    if (m_List->getSize() == other.getLength())
     {
-        delete m_List;
+        bool flag = true;
+        for (int i = 0; i < m_List->getSize(); i++)
+            if (this->get(i) != other.get(i))
+                flag = false;
+
+        return flag;
     }
 
-public:
-    T get(int index) const
-    {
-        return m_List->get(index);
-    }
+    return false;
+}
 
-    T getFirst() const
-    {
-        return m_List->getFirst();
-    }
+template <class T>
+void ListSequence<T>::set(T item, int index)
+{
+    (*m_List)[index] = item;
+}
 
-    T getLast() const
-    {
-        return m_List->getLast();
-    }
+template <class T>
+Sequence<T>* ListSequence<T>::getSubSequence(int startIndex, int endIndex) const
+{
+    auto* res = new ListSequence<T>(*m_List->getSubList(startIndex, endIndex));
+    return res;
+}
 
-    int getLength() const
-    {
-        return m_List->getSize();
-    }
+template <class T>
+void ListSequence<T>::insertAt(T item, int index)
+{
+    m_List->insertAt(item, index);
+}
 
-    int find(const T& item) const
-    {
-        return m_List->find(item);
-    }
+template <class T>
+void ListSequence<T>::append(T item)
+{
+    m_List->append(item);
+}
 
-    void clear()
-    {
-        delete this;
-    }
+template <class T>
+void ListSequence<T>::prepend(T item)
+{
+    m_List->prepend(item);
+}
 
-public:
-    T& operator[](int index)
-    {
-        return (*m_List)[index];
-    }
+template <class T>
+Sequence<T>* ListSequence<T>::concat(Sequence<T>* other) const
+{
+    if (other == nullptr)
+        throw std::runtime_error("Null pointer error\n");
 
-    ListSequence<T>& operator =(const Sequence<T>& other)
-    {
-        if (this != &other)
-        {
-            delete m_List;
+    auto* resultList = new ListSequence<T>;
+    *(resultList->m_List) = *(m_List);
 
-            m_List = new LinkedList<T>;
-            for (int i = 0; i < other.getLength(); i++)
-                m_List->append(other.get(i));
-        }
-        return *this;
-    }
+    for (int i = 0; i < other->getLength(); i++)
+        resultList->append((*other)[i]);
 
-    bool operator ==(const Sequence<T>& other) const
-    {
-        if (m_List->getSize() == other.getLength())
-        {
-            bool flag = true;
-            for (int i = 0; i < m_List->getSize(); i++)
-                if (this->get(i) != other.get(i))
-                    flag = false;
+    return resultList;
+}
 
-            return flag;
-        }
+template <class T>
+T ListSequence<T>::pop(int index)
+{
+    return m_List->pop(index);
+}
 
-        return false;
-    }
+template <class T>
+void ListSequence<T>::print() const
+{
+    m_List->print();
+}
 
-public:
-    void set(T item, int index)
-    {
-        (*m_List)[index] = item;
-    }
+template <class T>
+Sequence<T>* ListSequence<T>::map(T func(const T&)) const
+{
+    return new ListSequence<T>(*(m_List->map(func)));
+}
 
-    Sequence<T>* getSubSequence(int startIndex, int endIndex) const
-    {
-        auto* res = new ListSequence<T>(*m_List->getSubList(startIndex, endIndex));
-        return res;
-    }
+template <class T>
+Sequence<T>* ListSequence<T>::where(bool func(const T&)) const
+{
+    return new ListSequence<T>(*(m_List->where(func)));
+}
 
-    void insertAt(T item, int index)
-    {
-        m_List->insertAt(item, index);
-    }
-
-    void append(T item)
-    {
-        m_List->append(item);
-    }
-
-    void prepend(T item)
-    {
-        m_List->prepend(item);
-    }
-
-    Sequence<T>* concat(Sequence<T>* other) const
-    {
-        if (other == nullptr)
-            throw std::runtime_error("Null pointer error\n");
-
-        auto* resultList = new ListSequence<T>;
-        *(resultList->m_List) = *(m_List);
-
-        for (int i = 0; i < other->getLength(); i++)
-            resultList->append((*other)[i]);
-
-        return resultList;
-    }
-
-    T pop(int index)
-    {
-        return m_List->pop(index);
-    }
-
-    void print() const
-    {
-        m_List->print();
-    }
-
-public:
-    Sequence<T>* map(T func(const T&)) const
-    {
-        return new ListSequence<T>(*(m_List->map(func)));
-    }
-
-    Sequence<T>* where(bool func(const T&)) const
-    {
-        return new ListSequence<T>(*(m_List->where(func)));
-    }
-
-    T reduce(T func(const T&, const T&), T startValue) const
-    {
-        return m_List->reduce(func, startValue);
-    }
-};
+template <class T>
+T ListSequence<T>::reduce(T func(const T&, const T&), T startValue) const
+{
+    return m_List->reduce(func, startValue);
+}

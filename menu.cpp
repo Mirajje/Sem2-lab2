@@ -1,4 +1,4 @@
-#include "Sequence.h"
+#include "Sequence_lib.h"
 
 template<class T>
 void input(T* a)
