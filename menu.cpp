@@ -67,9 +67,9 @@ void menu()
                     printf("Enter insert item\n");
                     input(&(*seq)[index]);
                 }
-                catch (const std::runtime_error& error)
+                catch (const Errors& error)
                 {
-                    std::cout << error.what() << std::endl;
+                    std::cout << "Process finished with error code = " << error << std::endl;
                     exit(0);
                 }
                 break;
@@ -98,9 +98,9 @@ void menu()
                 {
                     seq->set(item, index);
                 }
-                catch (const std::runtime_error& error)
+                catch (const Errors& error)
                 {
-                    std::cout << error.what() << std::endl;
+                    std::cout << "Process finished with error code = " << error << std::endl;
                     exit(0);
                 }
                 break;
@@ -113,9 +113,9 @@ void menu()
                 {
                     item = seq->pop(index);
                 }
-                catch (const std::runtime_error& error)
+                catch (const Errors& error)
                 {
-                    std::cout << error.what() << std::endl;
+                    std::cout << "Process finished with error code = " << error << std::endl;
                     exit(0);
                 }
 

@@ -197,7 +197,7 @@ template <class T>
 Sequence<T>* ListSequence<T>::concat(Sequence<T>* other) const
 {
     if (other == nullptr)
-        throw std::runtime_error("Null pointer error\n");
+        throw Errors(Errors::NULL_POINTER_ERROR);
 
     auto* resultList = new ListSequence<T>;
     *(resultList->m_List) = *(m_List);

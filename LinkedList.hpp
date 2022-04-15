@@ -1,4 +1,5 @@
 #include <iostream>
+#include "ErrorHandler.h"
 
 template<class T>
 struct Node
@@ -54,7 +55,7 @@ template <class T>
 LinkedList<T>::LinkedList(int count)
 {
     if (count < 0)
-        throw std::runtime_error("Negative size error\n");
+        throw Errors(Errors::NEGATIVE_SIZE_ERROR);
 
     if (count > 0)
         m_Head = new Node<T>;
@@ -83,9 +84,9 @@ template <class T>
 LinkedList<T>::LinkedList(T* items, int count)
 {
     if (items == nullptr)
-        throw std::runtime_error("Null pointer error\n");
+        throw Errors(Errors::NULL_POINTER_ERROR);
     if (count < 0)
-        throw std::runtime_error("Negative size error\n");
+        throw Errors(Errors::NEGATIVE_SIZE_ERROR);
 
     if (count > 0)
         m_Head = new Node<T>;
@@ -160,8 +161,11 @@ LinkedList<T>::~LinkedList()
 template <class T>
 T& LinkedList<T>::operator[](int index)
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     if (index < 0 || index >= m_Size)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     Node<T>* current = m_Head;
 
@@ -249,8 +253,11 @@ int LinkedList<T>::getSize() const { return m_Size; }
 template <class T>
 const T& LinkedList<T>::get(int index) const
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     if (index < 0 || index >= m_Size)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     Node<T>* current = m_Head;
 
@@ -264,7 +271,7 @@ template <class T>
 const T& LinkedList<T>::getFirst() const
 {
     if (m_Size == 0)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::ZERO_SIZE_ERROR);
 
     return m_Head->value;
 }
@@ -273,7 +280,7 @@ template <class T>
 const T& LinkedList<T>::getLast() const
 {
     if (m_Size == 0)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::ZERO_SIZE_ERROR);
 
     return m_Tail->value;
 }
@@ -304,8 +311,11 @@ int LinkedList<T>::find(T item) const
 template <class T>
 T LinkedList<T>::pop(int index)
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     if (index < 0 || index >= m_Size)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     Node<T>* current = m_Head;
 
@@ -343,8 +353,11 @@ T LinkedList<T>::pop(int index)
 template <class T>
 LinkedList<T>* LinkedList<T>::getSubList(int startIndex, int endIndex) const
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     if (startIndex < 0 || endIndex >= m_Size)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     Node<T>* current = m_Head;
     int count = 0;
@@ -412,7 +425,7 @@ template <class T>
 void LinkedList<T>::insertAt(const T& item, int index)
 {
     if (index < 0 || index > m_Size)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     if (index == 0)
         this->prepend(item);
@@ -438,7 +451,7 @@ void LinkedList<T>::insertAt(const T& item, int index)
 template <class T>
 LinkedList<T>* LinkedList<T>::concat(LinkedList<T>* other){
     if (other == nullptr)
-        throw std::runtime_error("Null pointer error\n");
+        throw Errors(Errors::NULL_POINTER_ERROR);
 
     auto* resultList = new LinkedList<T>;
     *resultList = *this;

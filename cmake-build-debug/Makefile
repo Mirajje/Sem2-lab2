@@ -128,6 +128,30 @@ lab2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab2.dir\build.make CMakeFiles/lab2.dir/build
 .PHONY : lab2/fast
 
+Sequence.obj: Sequence.cpp.obj
+.PHONY : Sequence.obj
+
+# target to build an object file
+Sequence.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab2.dir\build.make CMakeFiles/lab2.dir/Sequence.cpp.obj
+.PHONY : Sequence.cpp.obj
+
+Sequence.i: Sequence.cpp.i
+.PHONY : Sequence.i
+
+# target to preprocess a source file
+Sequence.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab2.dir\build.make CMakeFiles/lab2.dir/Sequence.cpp.i
+.PHONY : Sequence.cpp.i
+
+Sequence.s: Sequence.cpp.s
+.PHONY : Sequence.s
+
+# target to generate assembly for a file
+Sequence.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab2.dir\build.make CMakeFiles/lab2.dir/Sequence.cpp.s
+.PHONY : Sequence.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -161,6 +185,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... lab2
+	@echo ... Sequence.obj
+	@echo ... Sequence.i
+	@echo ... Sequence.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

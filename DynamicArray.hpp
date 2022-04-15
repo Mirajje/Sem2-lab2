@@ -1,4 +1,5 @@
 #include <iostream>
+#include "ErrorHandler.h"
 
 template <class T>
 class DynamicArray{
@@ -38,7 +39,7 @@ template <class T>
 DynamicArray<T>::DynamicArray(int size)
 {
     if (size < 0)
-        throw std::runtime_error("Negative size error\n");
+        throw Errors(Errors::NEGATIVE_SIZE_ERROR);
     m_Size = size;
     m_Data = new T[m_Size]();
 }
@@ -47,10 +48,10 @@ template <class T>
 DynamicArray<T>::DynamicArray(T* items, int count)
 {
     if (items == nullptr)
-        throw std::runtime_error("Null pointer error\n");
+        throw Errors(Errors::NULL_POINTER_ERROR);
 
     if (count < 0)
-        throw std::runtime_error("Negative size error\n");
+        throw Errors(Errors::NEGATIVE_SIZE_ERROR);
 
     m_Size = count;
     m_Data = new T[m_Size];
@@ -78,8 +79,11 @@ DynamicArray<T>::~DynamicArray()
 template <class T>
 T& DynamicArray<T>::operator[](int index)
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     if (index < 0 || index >= m_Size)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
     return m_Data[index];
 }
 
@@ -111,8 +115,11 @@ DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>&& other) noexcept
 template <class T>
 const T& DynamicArray<T>::get(int index) const
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     if (index < 0 || index >= m_Size)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
     return m_Data[index];
 }
 
@@ -122,8 +129,11 @@ int DynamicArray<T>::getSize() const { return m_Size; }
 template <class T>
 void DynamicArray<T>::set(int index, const T& value)
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     if (index < 0 || index >= m_Size)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
     m_Data[index] = value;
 }
 
@@ -131,7 +141,7 @@ template <class T>
 void DynamicArray<T>::resize(int new_Size)
 {
     if (new_Size < 0)
-        throw std::runtime_error("Negative size error\n");
+        throw Errors(Errors::NEGATIVE_SIZE_ERROR);
     T* new_Data = new T[new_Size]();
 
     for (int i = 0; i < std::min(new_Size, m_Size); i++)
@@ -151,8 +161,11 @@ T* DynamicArray<T>::end(){ return &m_Data[m_Size]; }
 template <class T>
 T DynamicArray<T>::pop(int index)
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     if (index >= m_Size || index < 0)
-        throw std::runtime_error("Index out of range\n");
+        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     T ans = m_Data[index];
 
