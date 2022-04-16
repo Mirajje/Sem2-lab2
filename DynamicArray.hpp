@@ -1,5 +1,8 @@
+#ifndef HPP_DYNAMIC_ARRAY
+#define HPP_DYNAMIC_ARRAY
+
 #include <iostream>
-#include "ErrorHandler.h"
+#include "Errors.h"
 
 template <class T>
 class DynamicArray{
@@ -18,6 +21,7 @@ public:
     T& operator[](int index);
     DynamicArray<T>& operator=(const DynamicArray<T>& other);
     DynamicArray<T>& operator=(DynamicArray<T>&& other) noexcept;
+    bool operator ==(const DynamicArray<T>&);
 
 public:
     const T& get(int index) const;
@@ -113,6 +117,22 @@ DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>&& other) noexcept
 }
 
 template <class T>
+bool DynamicArray<T>::operator ==(const DynamicArray<T>& other)
+{
+    if (m_Size == other.getSize())
+    {
+        bool flag = true;
+        for (int i = 0; i < m_Size; i++)
+            if (this->get(i) != other.get(i))
+                flag = false;
+
+        return flag;
+    }
+
+    return false;
+}
+
+template <class T>
 const T& DynamicArray<T>::get(int index) const
 {
     if (m_Size == 0)
@@ -120,6 +140,7 @@ const T& DynamicArray<T>::get(int index) const
 
     if (index < 0 || index >= m_Size)
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
+
     return m_Data[index];
 }
 
@@ -196,3 +217,5 @@ void DynamicArray<T>::print() const
         std::cout << m_Data[i] << ' ';
     std::cout << '\n';
 }
+
+#endif

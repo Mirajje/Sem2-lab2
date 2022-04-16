@@ -1,3 +1,6 @@
+#ifndef HPP_LIST_SEQUENCE
+#define HPP_LIST_SEQUENCE
+
 #include "LinkedList.hpp"
 #include "Sequence.h"
 
@@ -237,3 +240,5 @@ T ListSequence<T>::reduce(T func(const T&, const T&), T startValue) const
 {
     return m_List->reduce(func, startValue);
 }
+
+#endif

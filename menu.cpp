@@ -1,4 +1,5 @@
-#include "Sequence_lib.h"
+#ifndef CPP_MENU
+#define CPP_MENU
 
 template<class T>
 void input(T* a)
@@ -38,7 +39,11 @@ void menu()
         t = -1;
         int index;
         while (t < 1 || t > 9)
+        {
+            printf("Enter a command: \n");
             input(&t);
+        }
+
 
         switch (t)
         {
@@ -125,3 +130,5 @@ void menu()
     }
 
 }
+
+#endif

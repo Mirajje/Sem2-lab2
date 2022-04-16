@@ -1,5 +1,8 @@
+#ifndef HPP_LINKED_LIST
+#define HPP_LINKED_LIST
+
 #include <iostream>
-#include "ErrorHandler.h"
+#include "Errors.h"
 
 template<class T>
 struct Node
@@ -27,6 +30,7 @@ public:
     T& operator[](int index);
     LinkedList& operator=(const LinkedList& other);
     LinkedList& operator=(LinkedList&& other) noexcept;
+    bool operator ==(const LinkedList& other) const;
 
 public:
     int getSize() const;
@@ -85,6 +89,7 @@ LinkedList<T>::LinkedList(T* items, int count)
 {
     if (items == nullptr)
         throw Errors(Errors::NULL_POINTER_ERROR);
+
     if (count < 0)
         throw Errors(Errors::NEGATIVE_SIZE_ERROR);
 
@@ -245,6 +250,21 @@ LinkedList<T>& LinkedList<T>::operator=(LinkedList&& other) noexcept
     other.m_Tail = nullptr;
     other.m_Size = 0;
     return *this;
+}
+
+template <class T>
+bool LinkedList<T>::operator ==(const LinkedList& other) const
+{
+    if (m_Size == other.m_Size)
+    {
+        bool flag = true;
+        for (int i = 0; i < m_Size; i++)
+            if (this->get(i) != other.get(i))
+                flag = false;
+        return flag;
+    }
+
+    return false;
 }
 
 template <class T>
@@ -530,3 +550,5 @@ T LinkedList<T>::reduce(T func(const T&, const T&), T startValue) const
     }
     return result;
 }
+
+#endif

@@ -1,6 +1,9 @@
+#ifndef HPP_ARRAY_SEQUENCE
+#define HPP_ARRAY_SEQUENCE
+
 #include "Sequence.h"
 #include "DynamicArray.hpp"
-#include "ErrorHandler.h"
+#include "Errors.h"
 
 template <class T>
 class ArraySequence : public Sequence<T>
@@ -335,3 +338,5 @@ T ArraySequence<T>::reduce(T func(const T&, const T&), T startValue) const
     }
     return result;
 }
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef CPP_SEQUENCE
+#define CPP_SEQUENCE
+
 #include "Sequence.h"
 
 template <class T>
@@ -17,3 +20,5 @@ std::ostream& operator<<(std::ostream& out, const Sequence<T>& seq)
 
     return out;
 }
+
+#endif
