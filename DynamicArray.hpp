@@ -9,6 +9,7 @@ class DynamicArray{
 private:
     T* m_Data = nullptr;
     int m_Size = 0;
+    int m_Capacity = 0;
 
 public:
     DynamicArray();
@@ -31,7 +32,6 @@ public:
     T* begin();
     T* end();
     T pop(int index);
-    void print(int count) const;
     void print() const;
 
 };
@@ -45,6 +45,7 @@ DynamicArray<T>::DynamicArray(int size)
     if (size < 0)
         throw Errors(Errors::NEGATIVE_SIZE_ERROR);
     m_Size = size;
+    m_Capacity = size;
     m_Data = new T[m_Size]();
 }
 
@@ -58,6 +59,7 @@ DynamicArray<T>::DynamicArray(T* items, int count)
         throw Errors(Errors::NEGATIVE_SIZE_ERROR);
 
     m_Size = count;
+    m_Capacity = m_Size;
     m_Data = new T[m_Size];
 
     for (int i = 0; i < count; i++)
@@ -68,6 +70,7 @@ template <class T>
 DynamicArray<T>::DynamicArray(const DynamicArray<T>& dynamicArray)
 {
     m_Size = dynamicArray.m_Size;
+    m_Capacity = m_Size;
     m_Data = new T[m_Size];
 
     for (int i = 0; i < m_Size; i++)
@@ -98,6 +101,7 @@ DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& other)
     {
         delete[] m_Data;
         m_Size = other.m_Size;
+        m_Capacity = m_Size;
         m_Data = new T[m_Size];
         for (int i = 0; i < m_Size; i++)
             m_Data[i] = other.m_Data[i];
@@ -110,6 +114,7 @@ DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>&& other) noexcept
 {
     delete[] m_Data;
     m_Size = other.m_Size;
+    m_Capacity = m_Size;
     m_Data = other.m_Data;
 
     other.m_Data = nullptr;
@@ -155,6 +160,7 @@ void DynamicArray<T>::set(int index, const T& value)
 
     if (index < 0 || index >= m_Size)
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
+
     m_Data[index] = value;
 }
 
@@ -163,7 +169,15 @@ void DynamicArray<T>::resize(int new_Size)
 {
     if (new_Size < 0)
         throw Errors(Errors::NEGATIVE_SIZE_ERROR);
-    T* new_Data = new T[new_Size]();
+
+    while (m_Capacity < new_Size)
+        if (m_Capacity != 0)
+            m_Capacity *= 2;
+        else
+            m_Capacity += 1;
+
+
+    T* new_Data = new T[m_Capacity]();
 
     for (int i = 0; i < std::min(new_Size, m_Size); i++)
         new_Data[i] = m_Data[i];
@@ -190,24 +204,19 @@ T DynamicArray<T>::pop(int index)
 
     T ans = m_Data[index];
 
-    DynamicArray<T> result(m_Size - 1);
+    T* result_Data = new T[m_Capacity - 1];
 
     for (int i = 0; i < m_Size - 1; i++)
         if (i < index)
-            result[i] = m_Data[i];
+            result_Data[i] = m_Data[i];
         else
-            result[i] = m_Data[i + 1];
+            result_Data[i] = m_Data[i + 1];
 
-    *this = result;
+    m_Size -= 1;
+    m_Capacity -= 1;
+    delete m_Data;
+    m_Data = result_Data;
     return ans;
-}
-
-template <class T>
-void DynamicArray<T>::print(int count) const
-{
-    for (int i = 0; i < count; i++)
-        std::cout << m_Data[i] << ' ';
-    std::cout << '\n';
 }
 
 template <class T>

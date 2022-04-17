@@ -70,11 +70,13 @@ void ArraySequenceTests::getSubSequenceTest()
 void ArraySequenceTests::insertAtTest()
 {
     int items1[5] = {0, 2, 2, 4, 5};
-    int items2[6] = {0, 2, 3, 2, 4, 5};
+    int items2[7] = {0, 2, 3, 2, 15, 4, 5};
 
     ArraySequence<int> array1(items1, 5);
-    ArraySequence<int> array2(items2, 6);
+    ArraySequence<int> array2(items2, 7);
     array1.insertAt(3, 2);
+    array1.insertAt(15, 4);
+
     assert(array1 == array2);
 }
 

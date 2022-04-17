@@ -10,7 +10,6 @@ class ArraySequence : public Sequence<T>
 {
 private:
     DynamicArray<T>* m_Array;
-    int m_Count;
 
 public:
     ArraySequence();
@@ -55,35 +54,30 @@ template <class T>
 ArraySequence<T>::ArraySequence()
 {
     m_Array = new DynamicArray<T>();
-    m_Count = 0;
 }
 
 template <class T>
 ArraySequence<T>::ArraySequence(int count)
 {
     m_Array = new DynamicArray<T>(count);
-    m_Count = count;
 }
 
 template <class T>
 ArraySequence<T>::ArraySequence(T* items, int count)
 {
     m_Array = new DynamicArray<T>(items, count);
-    m_Count = count;
 }
 
 template <class T>
 ArraySequence<T>::ArraySequence(const DynamicArray<T>& other)
 {
     m_Array = new DynamicArray<T>(other);
-    m_Count = other.getSize();
 }
 
 template <class T>
 ArraySequence<T>::ArraySequence(const ArraySequence<T>& other)
 {
     m_Array = new DynamicArray<T>(*other.m_Array);
-    m_Count = other.m_Count;
 }
 
 template <class T>
@@ -92,7 +86,6 @@ ArraySequence<T>::ArraySequence(const Sequence<T>& other)
     m_Array = new DynamicArray<T>(other.getLength());
     for (int i = 0; i < other.getLength(); i++)
         m_Array->set(i, other.get(i));
-    m_Count = other.getLength();
 }
 
 template <class T>
@@ -104,10 +97,10 @@ ArraySequence<T>::~ArraySequence()
 template <class T>
 T ArraySequence<T>::get(int index) const
 {
-    if (m_Count == 0)
+    if (m_Array->getSize() == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
 
-    if (index < 0 || index >= m_Count)
+    if (index < 0 || index >= m_Array->getSize())
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     return m_Array->get(index);
@@ -116,7 +109,7 @@ T ArraySequence<T>::get(int index) const
 template <class T>
 T ArraySequence<T>::getFirst() const
 {
-    if (m_Count == 0)
+    if (m_Array->getSize() == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
 
     return m_Array->get(0);
@@ -125,22 +118,22 @@ T ArraySequence<T>::getFirst() const
 template <class T>
 T ArraySequence<T>::getLast() const
 {
-    if (m_Count == 0)
+    if (m_Array->getSize() == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
 
-    return m_Array->get(m_Count - 1);
+    return m_Array->get(m_Array->getSize() - 1);
 }
 
 template <class T>
 int ArraySequence<T>::getLength() const
 {
-    return m_Count;
+    return m_Array->getSize();
 }
 
 template <class T>
 int ArraySequence<T>::find(const T& item) const
 {
-    for (int i = 0; i < m_Count; i++)
+    for (int i = 0; i < m_Array->getSize(); i++)
         if (this->get(i) == item)
             return i;
 
@@ -156,10 +149,10 @@ void ArraySequence<T>::clear()
 template <class T>
 T& ArraySequence<T>::operator[](int index)
 {
-    if (m_Count == 0)
+    if (m_Array->getSize() == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
 
-    if (index < 0 || index >= m_Count)
+    if (index < 0 || index >= m_Array->getSize())
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     return (*m_Array)[index];
@@ -175,7 +168,6 @@ ArraySequence<T>& ArraySequence<T>::operator =(const Sequence<T>& other)
             result[i] = other.get(i);
 
         *m_Array = result;
-        m_Count = other.getLength();
     }
     return *this;
 }
@@ -183,10 +175,10 @@ ArraySequence<T>& ArraySequence<T>::operator =(const Sequence<T>& other)
 template <class T>
 bool ArraySequence<T>::operator ==(const Sequence<T>& other) const
 {
-    if (m_Count == other.getLength())
+    if (m_Array->getSize() == other.getLength())
     {
         bool flag = true;
-        for (int i = 0; i < m_Count; i++)
+        for (int i = 0; i < m_Array->getSize(); i++)
             if (this->get(i) != other.get(i))
                 flag = false;
 
@@ -199,10 +191,10 @@ bool ArraySequence<T>::operator ==(const Sequence<T>& other) const
 template <class T>
 void ArraySequence<T>::set(T item, int index)
 {
-    if (m_Count == 0)
+    if (m_Array->getSize() == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
 
-    if (index < 0 || index >= m_Count)
+    if (index < 0 || index >= m_Array->getSize())
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     (*m_Array)[index] = item;
@@ -211,10 +203,10 @@ void ArraySequence<T>::set(T item, int index)
 template <class T>
 Sequence<T>* ArraySequence<T>::getSubSequence(int startIndex, int endIndex) const
 {
-    if (m_Count == 0)
+    if (m_Array->getSize() == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
 
-    if (startIndex > endIndex || startIndex < 0 || endIndex >= m_Count)
+    if (startIndex > endIndex || startIndex < 0 || endIndex >= m_Array->getSize())
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
     DynamicArray<T> temp(endIndex - startIndex + 1);
@@ -228,20 +220,13 @@ Sequence<T>* ArraySequence<T>::getSubSequence(int startIndex, int endIndex) cons
 template <class T>
 void ArraySequence<T>::insertAt(T item, int index)
 {
-    if (index < 0 || index > m_Count)
+    if (index < 0 || index > m_Array->getSize())
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
-    if (m_Count == m_Array->getSize())
-    {
-        if (m_Count != 0)
-            m_Array->resize(m_Array->getSize() * 2);
-        else
-            m_Array->resize(m_Array->getSize() + 1);
-    }
-    m_Count += 1;
+    m_Array->resize(m_Array->getSize() + 1);
 
     T prev = (*m_Array)[index]; T temp;
-    for (int i = index + 1; i < m_Count; i++)
+    for (int i = index + 1; i < m_Array->getSize(); i++)
     {
         temp = (*m_Array)[i];
         (*m_Array)[i] = prev;
@@ -253,7 +238,7 @@ void ArraySequence<T>::insertAt(T item, int index)
 template <class T>
 void ArraySequence<T>::append(T item)
 {
-    this->insertAt(item, m_Count);
+    this->insertAt(item, m_Array->getSize());
 }
 
 template <class T>
@@ -270,7 +255,6 @@ Sequence<T>* ArraySequence<T>::concat(Sequence<T>* other) const
 
     auto* resultArray = new ArraySequence<T>;
     *(resultArray->m_Array) = *(m_Array);
-    resultArray->m_Count = m_Count;
 
     for (int i = 0; i < other->getLength(); i++)
         resultArray->append((*other)[i]);
@@ -281,27 +265,26 @@ Sequence<T>* ArraySequence<T>::concat(Sequence<T>* other) const
 template <class T>
 T ArraySequence<T>::pop(int index)
 {
-    if (m_Count == 0)
+    if (m_Array->getSize() == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
 
-    if (index >= m_Count || index < 0)
+    if (index >= m_Array->getSize() || index < 0)
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
-    m_Count -= 1;
     return m_Array->pop(index);
 }
 
 template <class T>
 void ArraySequence<T>::print() const
 {
-    m_Array->print(m_Count);
+    m_Array->print();
 }
 
 template <class T>
 Sequence<T>* ArraySequence<T>::map(T func(const T&)) const
 {
-    auto* result = new ArraySequence<T>(m_Count);
-    for (int i = 0; i < m_Count; i++)
+    auto* result = new ArraySequence<T>(m_Array->getSize());
+    for (int i = 0; i < m_Array->getSize(); i++)
         (*result)[i] = func(m_Array->get(i));
 
     return result;
@@ -311,14 +294,14 @@ template <class T>
 Sequence<T>* ArraySequence<T>::where(bool func(const T&)) const
 {
     int count = 0;
-    for (int i = 0; i < m_Count; i++)
+    for (int i = 0; i < m_Array->getSize(); i++)
         if (func(m_Array->get(i)))
             count += 1;
 
     auto* result = new ArraySequence<T>(count);
 
     int j = 0;
-    for (int i = 0; i < m_Count; i++)
+    for (int i = 0; i < m_Array->getSize(); i++)
         if (func(m_Array->get(i)))
         {
             result->set(m_Array->get(i), j);
@@ -332,7 +315,7 @@ template <class T>
 T ArraySequence<T>::reduce(T func(const T&, const T&), T startValue) const
 {
     T result = startValue;
-    for (int i = 0; i < m_Count; i++)
+    for (int i = 0; i < m_Array->getSize(); i++)
     {
         result = func(m_Array->get(i), result);
     }
