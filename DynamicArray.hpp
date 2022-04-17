@@ -204,7 +204,7 @@ T DynamicArray<T>::pop(int index)
 
     T ans = m_Data[index];
 
-    T* result_Data = new T[m_Capacity - 1];
+    T* result_Data = new T[m_Capacity - 1]();
 
     for (int i = 0; i < m_Size - 1; i++)
         if (i < index)

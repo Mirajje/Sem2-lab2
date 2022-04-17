@@ -83,13 +83,28 @@
 		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/ArraySequence.hpp">
 			<Option target="lab2"/>
 		</Unit>
+		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/ArraySequenceTests.hpp">
+			<Option target="lab2"/>
+		</Unit>
 		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/DynamicArray.hpp">
+			<Option target="lab2"/>
+		</Unit>
+		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/DynamicArrayTests.hpp">
+			<Option target="lab2"/>
+		</Unit>
+		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/Errors.h">
 			<Option target="lab2"/>
 		</Unit>
 		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/LinkedList.hpp">
 			<Option target="lab2"/>
 		</Unit>
+		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/LinkedListTests.hpp">
+			<Option target="lab2"/>
+		</Unit>
 		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/ListSequence.hpp">
+			<Option target="lab2"/>
+		</Unit>
+		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/ListSequenceTests.hpp">
 			<Option target="lab2"/>
 		</Unit>
 		<Unit filename="C:/Users/Вова/Documents/GitHub/Sem2-lab2/Sequence.cpp">
