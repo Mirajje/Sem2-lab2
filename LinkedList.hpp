@@ -23,7 +23,8 @@ public:
     LinkedList();
     explicit LinkedList(int count);
     LinkedList(T* items, int count);
-    LinkedList(const LinkedList& linkedList);
+    LinkedList(const LinkedList& other);
+    LinkedList(LinkedList&& other) noexcept;
     ~LinkedList();
 
 public:
@@ -118,21 +119,21 @@ LinkedList<T>::LinkedList(T* items, int count)
 }
 
 template <class T>
-LinkedList<T>::LinkedList(const LinkedList& linkedList)
+LinkedList<T>::LinkedList(const LinkedList& other)
 {
-    if (linkedList.m_Size > 0)
+    if (other.m_Size > 0)
     {
         m_Head = new Node<T>;
     }
 
-    m_Size = linkedList.m_Size;
+    m_Size = other.m_Size;
 
     Node<T> *current = m_Head;
     Node<T> *previous = nullptr;
 
     for (int i = 0; i < m_Size; i++)
     {
-        current->value = linkedList.get(i);
+        current->value = other.get(i);
         current->prev = previous;
         if (i != m_Size - 1)
         {
@@ -146,6 +147,18 @@ LinkedList<T>::LinkedList(const LinkedList& linkedList)
         m_Tail = current;
         m_Tail->next = nullptr;
     }
+}
+
+template <class T>
+LinkedList<T>::LinkedList(LinkedList&& other) noexcept
+{
+    m_Head = other.m_Head;
+    m_Tail = other.m_Tail;
+    m_Size = other.m_Size;
+
+    other.m_Head = nullptr;
+    other.m_Tail = nullptr;
+    other.m_Size = 0;
 }
 
 template <class T>
@@ -225,30 +238,35 @@ LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other)
         }
 
     }
+
     return *this;
 }
 
 template <class T>
 LinkedList<T>& LinkedList<T>::operator=(LinkedList&& other) noexcept
 {
-    Node<T> *current = m_Head;
-    if (m_Head != nullptr)
+    if (this != &other)
     {
-        while (current->next != nullptr)
+        Node<T> *current = m_Head;
+        if (m_Head != nullptr)
         {
-            current = current->next;
-            delete current->prev;
+            while (current->next != nullptr)
+            {
+                current = current->next;
+                delete current->prev;
+            }
+            delete current;
         }
-        delete current;
+
+        m_Head = other.m_Head;
+        m_Size = other.m_Size;
+        m_Tail = other.m_Tail;
+
+        other.m_Head = nullptr;
+        other.m_Tail = nullptr;
+        other.m_Size = 0;
     }
 
-    m_Head = other.m_Head;
-    m_Size = other.m_Size;
-    m_Tail = other.m_Tail;
-
-    other.m_Head = nullptr;
-    other.m_Tail = nullptr;
-    other.m_Size = 0;
     return *this;
 }
 
@@ -485,6 +503,9 @@ LinkedList<T>* LinkedList<T>::concat(LinkedList<T>* other){
 template <class T>
 void LinkedList<T>::print() const
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     Node<T>* current = m_Head;
     for (int i = 0; i < m_Size; i++)
     {
@@ -497,6 +518,9 @@ void LinkedList<T>::print() const
 template <class T>
 void LinkedList<T>::reversed_print() const
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     Node<T>* current = m_Tail;
     for (int i = 0; i < m_Size; i++)
     {

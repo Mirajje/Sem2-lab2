@@ -15,7 +15,8 @@ public:
     DynamicArray();
     explicit DynamicArray(int size);
     DynamicArray(T* items, int count);
-    DynamicArray(const DynamicArray<T>& dynamicArray);
+    DynamicArray(const DynamicArray<T>& other);
+    DynamicArray(DynamicArray<T>&& other) noexcept;
     ~DynamicArray();
 
 public:
@@ -67,14 +68,26 @@ DynamicArray<T>::DynamicArray(T* items, int count)
 }
 
 template <class T>
-DynamicArray<T>::DynamicArray(const DynamicArray<T>& dynamicArray)
+DynamicArray<T>::DynamicArray(const DynamicArray<T>& other)
 {
-    m_Size = dynamicArray.m_Size;
+    m_Size = other.m_Size;
     m_Capacity = m_Size;
     m_Data = new T[m_Size];
 
     for (int i = 0; i < m_Size; i++)
-        m_Data[i] = dynamicArray.m_Data[i];
+        m_Data[i] = other.m_Data[i];
+}
+
+template <class T>
+DynamicArray<T>::DynamicArray(DynamicArray<T>&& other) noexcept
+{
+    m_Size = other.m_Size;
+    m_Capacity = m_Size;
+    m_Data = std::move(other.m_Data);
+
+    other.m_Data = nullptr;
+    other.m_Size = 0;
+    other.m_Capacity = 0;
 }
 
 template <class T>
@@ -106,18 +119,25 @@ DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& other)
         for (int i = 0; i < m_Size; i++)
             m_Data[i] = other.m_Data[i];
     }
+
     return *this;
 }
 
 template <class T>
 DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>&& other) noexcept
 {
-    delete[] m_Data;
-    m_Size = other.m_Size;
-    m_Capacity = m_Size;
-    m_Data = other.m_Data;
+    if (this != &other)
+    {
+        delete[] m_Data;
+        m_Size = other.m_Size;
+        m_Capacity = m_Size;
+        m_Data = other.m_Data;
 
-    other.m_Data = nullptr;
+        other.m_Data = nullptr;
+        other.m_Size = 0;
+        other.m_Capacity = 0;
+    }
+
     return *this;
 }
 
@@ -222,6 +242,9 @@ T DynamicArray<T>::pop(int index)
 template <class T>
 void DynamicArray<T>::print() const
 {
+    if (m_Size == 0)
+        throw Errors(Errors::ZERO_SIZE_ERROR);
+
     for (int i = 0; i < m_Size; i++)
         std::cout << m_Data[i] << ' ';
     std::cout << '\n';

@@ -16,7 +16,9 @@ public:
     explicit ArraySequence(int count);
     ArraySequence(T* items, int count);
     explicit ArraySequence(const DynamicArray<T>& other);
+    explicit ArraySequence(DynamicArray<T>&& other);
     ArraySequence(const ArraySequence<T>& other);
+    ArraySequence(ArraySequence<T>&& other) noexcept;
     explicit ArraySequence(const Sequence<T>& other);
     ~ArraySequence();
 
@@ -75,9 +77,21 @@ ArraySequence<T>::ArraySequence(const DynamicArray<T>& other)
 }
 
 template <class T>
+ArraySequence<T>::ArraySequence(DynamicArray<T>&& other)
+{
+    m_Array = new DynamicArray<T>(std::move(other));
+}
+
+template <class T>
 ArraySequence<T>::ArraySequence(const ArraySequence<T>& other)
 {
     m_Array = new DynamicArray<T>(*other.m_Array);
+}
+
+template <class T>
+ArraySequence<T>::ArraySequence(ArraySequence<T>&& other) noexcept
+{
+    m_Array = new DynamicArray<T>(std::move(*other.m_Array));
 }
 
 template <class T>

@@ -11,6 +11,7 @@ private:
     static void constructorFromItemsAndCountTest();
     static void equalityTest();
     static void constructorFromLinkedListTest();
+    static void constructorFromLinkedListRvalueReferenceTest();
     static void oneEqualAnotherRvalueReferenceTest();
     static void oneEqualAnotherTest();
     static void findTest();
@@ -65,6 +66,16 @@ void LinkedListTests::constructorFromLinkedListTest()
 
     LinkedList<int> list2(list1);
     assert(list2 == list1);
+}
+
+void LinkedListTests::constructorFromLinkedListRvalueReferenceTest()
+{
+    int items[5] = {1, 2, 3, 4, 5};
+    LinkedList<int> list1(items, 5);
+    LinkedList<int> list1Copy(list1);
+
+    LinkedList<int> list2(std::move(list1));
+    assert(list2 == list1Copy);
 }
 
 void LinkedListTests::oneEqualAnotherRvalueReferenceTest()
@@ -209,6 +220,7 @@ void LinkedListTests::allTestsTogether()
     constructorFromItemsAndCountTest();
     equalityTest();
     constructorFromLinkedListTest();
+    constructorFromLinkedListRvalueReferenceTest();
     oneEqualAnotherRvalueReferenceTest();
     oneEqualAnotherTest();
     findTest();
@@ -223,5 +235,6 @@ void LinkedListTests::allTestsTogether()
     reduceTest();
 
 }
+
 
 #endif

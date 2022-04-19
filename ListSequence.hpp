@@ -15,7 +15,9 @@ public:
     explicit ListSequence(int count);
     ListSequence(T* items, int count);
     explicit ListSequence(const LinkedList<T>& other);
+    explicit ListSequence(LinkedList<T>&& other);
     ListSequence(const ListSequence<T>& other);
+    ListSequence(ListSequence<T>&& other) noexcept;
     explicit ListSequence(const Sequence<T>& other);
     ~ListSequence();
 
@@ -74,9 +76,21 @@ ListSequence<T>::ListSequence(const LinkedList<T>& other)
 }
 
 template <class T>
+ListSequence<T>::ListSequence(LinkedList<T>&& other)
+{
+    m_List = new LinkedList<T>(std::move(other));
+}
+
+template <class T>
 ListSequence<T>::ListSequence(const ListSequence<T>& other)
 {
     m_List = new LinkedList<T>(*other.m_List);
+}
+
+template <class T>
+ListSequence<T>::ListSequence(ListSequence<T>&& other) noexcept
+{
+    m_List = new LinkedList<T>(std::move(*other.m_List));
 }
 
 template <class T>

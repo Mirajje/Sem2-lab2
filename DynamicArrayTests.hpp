@@ -11,6 +11,7 @@ private:
     static void constructorFromItemsAndCountTest();
     static void equalityTest();
     static void constructorFromDynamicArrayTest();
+    static void constructorFromDynamicArrayRvalueReferenceTest();
     static void oneEqualAnotherRvalueReferenceTest();
     static void oneEqualAnotherTest();
     static void resizeTest();
@@ -58,6 +59,17 @@ void DynamicArrayTests::constructorFromDynamicArrayTest()
     DynamicArray<int> array2(array1);
     assert(array1 == array2);
 }
+
+void DynamicArrayTests::constructorFromDynamicArrayRvalueReferenceTest()
+{
+    int items[5] = {1, 2, 3, 4, 5};
+    DynamicArray<int> array1(items, 5);
+    DynamicArray<int> array1Copy(array1);
+
+    DynamicArray<int> array2(std::move(array1));
+    assert(array1Copy == array2);
+}
+
 
 void DynamicArrayTests::oneEqualAnotherRvalueReferenceTest()
 {
@@ -109,6 +121,7 @@ void DynamicArrayTests::allTestsTogether()
     constructorFromItemsAndCountTest();
     equalityTest();
     constructorFromDynamicArrayTest();
+    constructorFromDynamicArrayRvalueReferenceTest();
     oneEqualAnotherRvalueReferenceTest();
     oneEqualAnotherTest();
     resizeTest();
