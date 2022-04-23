@@ -190,20 +190,33 @@ void DynamicArray<T>::resize(int new_Size)
     if (new_Size < 0)
         throw Errors(Errors::NEGATIVE_SIZE_ERROR);
 
+    bool flag = false;
     while (m_Capacity < new_Size)
+    {
         if (m_Capacity != 0)
             m_Capacity *= 2;
         else
             m_Capacity += 1;
+        flag = true;
+    }
 
 
-    T* new_Data = new T[m_Capacity]();
+    if (flag)
+    {
+        T* new_Data = new T[m_Capacity]();
 
-    for (int i = 0; i < std::min(new_Size, m_Size); i++)
-        new_Data[i] = m_Data[i];
+        for (int i = 0; i < std::min(new_Size, m_Size); i++)
+            new_Data[i] = m_Data[i];
 
-    delete[] m_Data;
-    m_Data = new_Data;
+        delete[] m_Data;
+        m_Data = new_Data;
+    }
+    else
+    {
+        if (new_Size < m_Size)
+            for (int i = new_Size; i < m_Size; i++)
+                m_Data[i] = T();
+    }
     m_Size = new_Size;
 }
 
@@ -242,11 +255,9 @@ T DynamicArray<T>::pop(int index)
 template <class T>
 void DynamicArray<T>::print() const
 {
-    if (m_Size == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
-    for (int i = 0; i < m_Size; i++)
-        std::cout << m_Data[i] << ' ';
+    if (m_Data != nullptr)
+        for (int i = 0; i < m_Size; i++)
+            std::cout << m_Data[i] << ' ';
     std::cout << '\n';
 }
 

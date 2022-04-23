@@ -503,14 +503,14 @@ LinkedList<T>* LinkedList<T>::concat(LinkedList<T>* other){
 template <class T>
 void LinkedList<T>::print() const
 {
-    if (m_Size == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
-    Node<T>* current = m_Head;
-    for (int i = 0; i < m_Size; i++)
+    if (m_Head != nullptr)
     {
-        std::cout << current->value << " ";
-        current = current->next;
+        Node<T>* current = m_Head;
+        for (int i = 0; i < m_Size; i++)
+        {
+            std::cout << current->value << " ";
+            current = current->next;
+        }
     }
     std::cout << std::endl;
 }
@@ -518,14 +518,14 @@ void LinkedList<T>::print() const
 template <class T>
 void LinkedList<T>::reversed_print() const
 {
-    if (m_Size == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
-    Node<T>* current = m_Tail;
-    for (int i = 0; i < m_Size; i++)
+    if (m_Tail != nullptr)
     {
-        std::cout << current->value << " ";
-        current = current->prev;
+        Node<T>* current = m_Tail;
+        for (int i = 0; i < m_Size; i++)
+        {
+            std::cout << current->value << " ";
+            current = current->prev;
+        }
     }
     std::cout << std::endl;
 }
