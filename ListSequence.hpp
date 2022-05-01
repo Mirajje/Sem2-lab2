@@ -22,12 +22,11 @@ public:
     ~ListSequence();
 
 public:
-    T get(int index) const;
-    T getFirst() const;
-    T getLast() const;
+    const T& get(int index) const;
+    const T& getFirst() const;
+    const T& getLast() const;
     int getLength() const;
     int find(const T& item) const;
-    void clear();
 
 public:
     T& operator[](int index);
@@ -35,11 +34,11 @@ public:
     bool operator ==(const Sequence<T>& other) const;
 
 public:
-    void set(T item, int index);
+    void set(const T& item, int index);
     Sequence<T>* getSubSequence(int startIndex, int endIndex) const;
-    void insertAt(T item, int index);
-    void append(T item);
-    void prepend(T item);
+    void insertAt(const T& item, int index);
+    void append(const T& item);
+    void prepend(const T& item);
     Sequence<T>* concat(Sequence<T>* other) const;
     T pop(int index);
     void print() const;
@@ -47,7 +46,7 @@ public:
 public:
     Sequence<T>* map(T func(const T&)) const;
     Sequence<T>* where(bool func(const T&)) const;
-    T reduce(T func(const T&, const T&), T startValue) const;
+    T reduce(T func(const T&, const T&), const T& startValue) const;
 
 };
 
@@ -108,19 +107,19 @@ ListSequence<T>::~ListSequence()
 }
 
 template <class T>
-T ListSequence<T>::get(int index) const
+const T& ListSequence<T>::get(int index) const
 {
     return m_List->get(index);
 }
 
 template <class T>
-T ListSequence<T>::getFirst() const
+const T& ListSequence<T>::getFirst() const
 {
     return m_List->getFirst();
 }
 
 template <class T>
-T ListSequence<T>::getLast() const
+const T& ListSequence<T>::getLast() const
 {
     return m_List->getLast();
 }
@@ -135,12 +134,6 @@ template <class T>
 int ListSequence<T>::find(const T& item) const
 {
     return m_List->find(item);
-}
-
-template <class T>
-void ListSequence<T>::clear()
-{
-    delete this;
 }
 
 template <class T>
@@ -180,7 +173,7 @@ bool ListSequence<T>::operator ==(const Sequence<T>& other) const
 }
 
 template <class T>
-void ListSequence<T>::set(T item, int index)
+void ListSequence<T>::set(const T& item, int index)
 {
     (*m_List)[index] = item;
 }
@@ -193,19 +186,19 @@ Sequence<T>* ListSequence<T>::getSubSequence(int startIndex, int endIndex) const
 }
 
 template <class T>
-void ListSequence<T>::insertAt(T item, int index)
+void ListSequence<T>::insertAt(const T& item, int index)
 {
     m_List->insertAt(item, index);
 }
 
 template <class T>
-void ListSequence<T>::append(T item)
+void ListSequence<T>::append(const T& item)
 {
     m_List->append(item);
 }
 
 template <class T>
-void ListSequence<T>::prepend(T item)
+void ListSequence<T>::prepend(const T& item)
 {
     m_List->prepend(item);
 }
@@ -250,7 +243,7 @@ Sequence<T>* ListSequence<T>::where(bool func(const T&)) const
 }
 
 template <class T>
-T ListSequence<T>::reduce(T func(const T&, const T&), T startValue) const
+T ListSequence<T>::reduce(T func(const T&, const T&), const T& startValue) const
 {
     return m_List->reduce(func, startValue);
 }

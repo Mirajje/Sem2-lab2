@@ -9,6 +9,7 @@ enum Errors
     NEGATIVE_SIZE_ERROR = 2,
     ZERO_SIZE_ERROR = 3,
     INDEX_OUR_OF_RANGE_ERROR = 4,
+    NOT_EQUAL_SIZES_ERROR = 5,
 };
 
 #endif

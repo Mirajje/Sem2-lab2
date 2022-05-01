@@ -5,6 +5,7 @@
 #include "ListSequenceTests.hpp"
 #include "DynamicArrayTests.hpp"
 #include "ArraySequenceTests.hpp"
+#include "RectMatrixTests.hpp"
 
 void tests()
 {
@@ -12,6 +13,7 @@ void tests()
     ListSequenceTests::allTestsTogether();
     DynamicArrayTests::allTestsTogether();
     ArraySequenceTests::allTestsTogether();
+    RectMatrixTests::allTestsTogether();
 }
 
 #endif

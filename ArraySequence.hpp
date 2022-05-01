@@ -23,12 +23,11 @@ public:
     ~ArraySequence();
 
 public:
-    T get(int index) const;
-    T getFirst() const;
-    T getLast() const;
+    const T& get(int index) const;
+    const T& getFirst() const;
+    const T& getLast() const;
     int getLength() const;
     int find(const T& item) const;
-    void clear();
 
 public:
     T& operator[](int index);
@@ -36,11 +35,11 @@ public:
     bool operator ==(const Sequence<T>& other) const;
 
 public:
-    void set(T item, int index);
+    void set(const T& item, int index);
     Sequence<T>* getSubSequence(int startIndex, int endIndex) const;
-    void insertAt(T item, int index);
-    void append(T item);
-    void prepend(T item);
+    void insertAt(const T& item, int index);
+    void append(const T& item);
+    void prepend(const T& item);
     Sequence<T>* concat(Sequence<T>* other) const;
     T pop(int index);
     void print() const;
@@ -48,7 +47,7 @@ public:
 public:
     Sequence<T>* map(T func(const T&)) const;
     Sequence<T>* where(bool func(const T&)) const;
-    T reduce(T func(const T&, const T&), T startValue) const;
+    T reduce(T func(const T&, const T&), const T& startValue) const;
 
 };
 
@@ -109,32 +108,20 @@ ArraySequence<T>::~ArraySequence()
 }
 
 template <class T>
-T ArraySequence<T>::get(int index) const
+const T& ArraySequence<T>::get(int index) const
 {
-    if (m_Array->getSize() == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
-    if (index < 0 || index >= m_Array->getSize())
-        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
-
     return m_Array->get(index);
 }
 
 template <class T>
-T ArraySequence<T>::getFirst() const
+const T& ArraySequence<T>::getFirst() const
 {
-    if (m_Array->getSize() == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
     return m_Array->get(0);
 }
 
 template <class T>
-T ArraySequence<T>::getLast() const
+const T& ArraySequence<T>::getLast() const
 {
-    if (m_Array->getSize() == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
     return m_Array->get(m_Array->getSize() - 1);
 }
 
@@ -155,20 +142,8 @@ int ArraySequence<T>::find(const T& item) const
 }
 
 template <class T>
-void ArraySequence<T>::clear()
-{
-    delete this;
-}
-
-template <class T>
 T& ArraySequence<T>::operator[](int index)
 {
-    if (m_Array->getSize() == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
-    if (index < 0 || index >= m_Array->getSize())
-        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
-
     return (*m_Array)[index];
 }
 
@@ -203,14 +178,8 @@ bool ArraySequence<T>::operator ==(const Sequence<T>& other) const
 }
 
 template <class T>
-void ArraySequence<T>::set(T item, int index)
+void ArraySequence<T>::set(const T& item, int index)
 {
-    if (m_Array->getSize() == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
-    if (index < 0 || index >= m_Array->getSize())
-        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
-
     (*m_Array)[index] = item;
 }
 
@@ -232,7 +201,7 @@ Sequence<T>* ArraySequence<T>::getSubSequence(int startIndex, int endIndex) cons
 }
 
 template <class T>
-void ArraySequence<T>::insertAt(T item, int index)
+void ArraySequence<T>::insertAt(const T& item, int index)
 {
     if (index < 0 || index > m_Array->getSize())
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
@@ -250,13 +219,13 @@ void ArraySequence<T>::insertAt(T item, int index)
 }
 
 template <class T>
-void ArraySequence<T>::append(T item)
+void ArraySequence<T>::append(const T& item)
 {
     this->insertAt(item, m_Array->getSize());
 }
 
 template <class T>
-void ArraySequence<T>::prepend(T item)
+void ArraySequence<T>::prepend(const T& item)
 {
     this->insertAt(item, 0);
 }
@@ -279,12 +248,6 @@ Sequence<T>* ArraySequence<T>::concat(Sequence<T>* other) const
 template <class T>
 T ArraySequence<T>::pop(int index)
 {
-    if (m_Array->getSize() == 0)
-        throw Errors(Errors::ZERO_SIZE_ERROR);
-
-    if (index >= m_Array->getSize() || index < 0)
-        throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
-
     return m_Array->pop(index);
 }
 
@@ -326,7 +289,7 @@ Sequence<T>* ArraySequence<T>::where(bool func(const T&)) const
 }
 
 template <class T>
-T ArraySequence<T>::reduce(T func(const T&, const T&), T startValue) const
+T ArraySequence<T>::reduce(T func(const T&, const T&), const T& startValue) const
 {
     T result = startValue;
     for (int i = 0; i < m_Array->getSize(); i++)

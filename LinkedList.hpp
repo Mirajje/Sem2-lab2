@@ -49,7 +49,7 @@ public:
     void reversed_print() const;
     LinkedList<T>* map(T func(const T&)) const;
     LinkedList<T>* where(bool func(const T&)) const;
-    T reduce(T func(const T&, const T&), T startValue) const;
+    T reduce(T func(const T&, const T&), const T& startValue) const;
 
 };
 
@@ -198,7 +198,8 @@ T& LinkedList<T>::operator[](int index)
 template <class T>
 LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other)
 {
-    if (this != &other){
+    if (this != &other)
+    {
         Node<T>* current = m_Head;
         if (m_Head != nullptr)
         {
@@ -562,7 +563,7 @@ LinkedList<T>* LinkedList<T>::where(bool func(const T&)) const
 }
 
 template <class T>
-T LinkedList<T>::reduce(T func(const T&, const T&), T startValue) const
+T LinkedList<T>::reduce(T func(const T&, const T&), const T& startValue) const
 {
     T result = startValue;
 

@@ -83,7 +83,7 @@ DynamicArray<T>::DynamicArray(DynamicArray<T>&& other) noexcept
 {
     m_Size = other.m_Size;
     m_Capacity = m_Size;
-    m_Data = std::move(other.m_Data);
+    m_Data = other.m_Data;
 
     other.m_Data = nullptr;
     other.m_Size = 0;
@@ -104,6 +104,7 @@ T& DynamicArray<T>::operator[](int index)
 
     if (index < 0 || index >= m_Size)
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
+
     return m_Data[index];
 }
 
@@ -213,9 +214,8 @@ void DynamicArray<T>::resize(int new_Size)
     }
     else
     {
-        if (new_Size < m_Size)
-            for (int i = new_Size; i < m_Size; i++)
-                m_Data[i] = T();
+        for (int i = new_Size; i < m_Size; i++)
+            m_Data[i] = T();
     }
     m_Size = new_Size;
 }
