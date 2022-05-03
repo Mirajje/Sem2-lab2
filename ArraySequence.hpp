@@ -41,7 +41,7 @@ public:
     void append(const T& item);
     void prepend(const T& item);
     Sequence<T>* concat(Sequence<T>* other) const;
-    T pop(int index);
+    T&& pop(int index);
     void print() const;
 
 public:
@@ -246,9 +246,9 @@ Sequence<T>* ArraySequence<T>::concat(Sequence<T>* other) const
 }
 
 template <class T>
-T ArraySequence<T>::pop(int index)
+T&& ArraySequence<T>::pop(int index)
 {
-    return m_Array->pop(index);
+    return std::move(m_Array->pop(index));
 }
 
 template <class T>

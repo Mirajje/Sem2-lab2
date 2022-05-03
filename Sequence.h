@@ -29,7 +29,7 @@ public:
     virtual void prepend(const T& item) = 0;
     virtual void insertAt(const T& item, int index) = 0;
     virtual Sequence<T>* concat(Sequence<T>* list) const = 0;
-    virtual T pop(int index) = 0;
+    virtual T&& pop(int index) = 0;
     virtual void print() const = 0;
 
 public:

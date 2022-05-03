@@ -32,6 +32,14 @@ public:
     int getHeight() const;
     int getWidth() const;
 
+    void addString(const Sequence<T>& seq, int index);
+    void addColumn(const Sequence<T>& seq, int index);
+    Sequence<T>* popString(int index);
+    Sequence<T>* popColumn(int index);
+    void swapStrings(int index1, int index2);
+    void swapColumns(int index1, int index2);
+    RectMatrix<T>&& transpose();
+
     void print() const;
 };
 
@@ -44,6 +52,8 @@ RectMatrix<T>&& operator *(const RectMatrix<T>& matrix, int multiplier);
 template<class T>
 RectMatrix<T>&& operator *(int multiplier, const RectMatrix<T>& matrix);
 
+template<class T>
+RectMatrix<T>&& operator *(const RectMatrix<T>& matrix1, const RectMatrix<T>& matrix2);
 
 
 template <class T>
@@ -185,8 +195,81 @@ int RectMatrix<T>::getHeight() const
 }
 
 template <class T>
+void RectMatrix<T>::addString(const Sequence<T>& seq, int index)
+{
+    if (seq.getLength() != m_Width)
+        throw Errors(Errors::WRONG_SIZE_ERROR);
+
+    m_Height += 1;
+    Sequence<T>* result = new ArraySequence<T>(seq);
+    m_Data->insertAt(result, index);
+}
+
+template <class T>
+void RectMatrix<T>::addColumn(const Sequence<T>& seq, int index)
+{
+    if (seq.getLength() != m_Height)
+        throw Errors(Errors::WRONG_SIZE_ERROR);
+
+    for (int i = 0; i < m_Height; i++)
+        (*m_Data)[i]->insertAt(seq.get(i), index);
+
+    m_Width += 1;
+}
+
+template <class T>
+Sequence<T>* RectMatrix<T>::popString(int index)
+{
+    m_Height -= 1;
+    return m_Data->pop(index);
+}
+
+template <class T>
+Sequence<T>* RectMatrix<T>::popColumn(int index)
+{
+    Sequence<T>* result = new ArraySequence<T>(m_Height);
+    for (int i = 0; i < m_Height; i++)
+        (*result)[i] = (*m_Data)[i]->pop(index);
+    m_Width -= 1;
+    return result;
+}
+
+template <class T>
+void RectMatrix<T>::swapStrings(int index1, int index2)
+{
+    Sequence<T>* temp;
+    temp = (*m_Data)[index1];
+    (*m_Data)[index1] = (*m_Data)[index2];
+    (*m_Data)[index2] = temp;
+}
+
+template <class T>
+void RectMatrix<T>::swapColumns(int index1, int index2)
+{
+    T temp;
+    for (int i = 0; i < m_Height; i++)
+    {
+        temp = (*(*m_Data)[i])[index1];
+        (*(*m_Data)[i])[index1] = (*(*m_Data)[i])[index2];
+        (*(*m_Data)[i])[index2] = std::move(temp);
+    }
+}
+
+template <class T>
+RectMatrix<T>&& RectMatrix<T>::transpose()
+{
+    auto* result = new RectMatrix<T>(m_Width, m_Height);
+    for (int i = 0; i < m_Height; i++)
+        for (int j = 0; j < m_Width; j++)
+            (*result)[j][i] = (*this)[i][j];
+
+    return std::move(*result);
+}
+
+template <class T>
 void RectMatrix<T>::print() const
 {
+    printf("\n");
     for (int i = 0; i < m_Height; i++)
         (*m_Data)[i]->print();
     printf("\n");
@@ -226,6 +309,25 @@ RectMatrix<T>&& operator *(int multiplier, const RectMatrix<T>& matrix)
             (*new_Matrix)[i][j] = matrix.get(i, j) * multiplier;
 
     return std::move(*new_Matrix);
+}
+
+template <class T>
+RectMatrix<T>&& operator *(const RectMatrix<T>& matrix1, const RectMatrix<T>& matrix2)
+{
+    if (matrix1.getWidth() != matrix2.getHeight())
+        throw Errors(Errors::NOT_EQUAL_SIZES_ERROR);
+
+    auto* result = new RectMatrix<T>(matrix1.getHeight(), matrix2.getWidth());
+    for (int i = 0; i < matrix1.getHeight(); i++)
+        for (int j = 0; j < matrix2.getWidth(); j++)
+        {
+            T sum = T();
+            for (int q = 0; q < matrix1.getWidth(); q++)
+                sum += (matrix1.get(i, q) * matrix2.get(q, j));
+            (*result)[i][j] = std::move(sum);
+        }
+
+    return std::move(*result);
 }
 
 #endif

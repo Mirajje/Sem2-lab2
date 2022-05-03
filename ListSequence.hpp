@@ -40,7 +40,7 @@ public:
     void append(const T& item);
     void prepend(const T& item);
     Sequence<T>* concat(Sequence<T>* other) const;
-    T pop(int index);
+    T&& pop(int index);
     void print() const;
 
 public:
@@ -219,9 +219,9 @@ Sequence<T>* ListSequence<T>::concat(Sequence<T>* other) const
 }
 
 template <class T>
-T ListSequence<T>::pop(int index)
+T&& ListSequence<T>::pop(int index)
 {
-    return m_List->pop(index);
+    return std::move(m_List->pop(index));
 }
 
 template <class T>

@@ -1,25 +1,19 @@
 #include <vector>
 #include "tests.cpp"
-#include "menu.cpp"
-#include "RectMatrix.hpp"
-
+#include "ComplexNumber.h"
 
 int main()
 {
     tests();
 
-   /* int list[5] = {1, 2, 3, 4, 5};
+    int list[5] = {1, 2, 3, 4, 5};
 
-    RectMatrix<int> matrix(3, 4);
-    RectMatrix<int> matrix2;
-    matrix2 = matrix;
-    matrix2 = matrix;
-
-    matrix.set(15, 0, 2);
-    matrix2.set(66, 1, 2);
-    RectMatrix<int> matrix3 = matrix2 + matrix;
-    matrix3 = matrix3 * 5;
+    RectMatrix<ComplexNumber> matrix(2, 3);
+    matrix[0][0] = ComplexNumber(15, 2);
     matrix.print();
-    matrix2.print();
-    matrix3.print();*/
+    RectMatrix<ComplexNumber>matrix2 = matrix;
+    (matrix + matrix2 * (5)).print();
+    matrix = matrix.transpose();
+    matrix.print();
+
 }

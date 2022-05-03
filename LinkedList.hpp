@@ -39,7 +39,7 @@ public:
     const T& getFirst() const;
     const T& getLast() const;
     int find(T item) const;
-    T pop(int index);
+    T&& pop(int index);
     LinkedList<T>* getSubList(int startIndex, int endIndex) const;
     void append(const T& item);
     void prepend(const T& item);
@@ -348,7 +348,7 @@ int LinkedList<T>::find(T item) const
 }
 
 template <class T>
-T LinkedList<T>::pop(int index)
+T&& LinkedList<T>::pop(int index)
 {
     if (m_Size == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
@@ -360,7 +360,7 @@ T LinkedList<T>::pop(int index)
 
     for (int i = 0; i < index; i++)
         current = current->next;
-    T result;
+    T* result;
 
     if (index == 0)
     {
@@ -369,24 +369,24 @@ T LinkedList<T>::pop(int index)
         m_Head = current->next;
         if (m_Head != nullptr)
             m_Head->prev = nullptr;
-        result = current->value;
+        result = new T(current->value);
         delete current;
     }
     else if (index == m_Size - 1)
     {
         m_Tail = current->prev;
         m_Tail->next = nullptr;
-        result = current->value;
+        result = new T(current->value);
         delete current;
     }
     else {
         current->next->prev = current->prev;
         current->prev->next = current->next;
-        result = current->value;
+        result = new T(current->value);
         delete current;
     }
     m_Size -= 1;
-    return result;
+    return std::move(*result);
 }
 
 template <class T>

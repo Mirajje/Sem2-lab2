@@ -15,6 +15,15 @@ private:
 
     static void sumTest();
     static void scalarMultiplyTest();
+    static void matrixMultiplyTest();
+
+    static void addStringTest();
+    static void addColumnTest();
+    static void popStringTest();
+    static void popColumnTest();
+    static void swapStringTest();
+    static void swapColumnsTest();
+    static void transposeTest();
 
 public:
     static void allTestsTogether();
@@ -96,6 +105,122 @@ void RectMatrixTests::scalarMultiplyTest()
     assert(3 * matrix1 == result);
 }
 
+void RectMatrixTests::addStringTest()
+{
+    int list[6] = {1, 2, 3, 4, 5, 6};
+    RectMatrix<int> matrix(5, 6);
+    Sequence<int>* seq = new ArraySequence<int>(list, 6);
+    matrix.addString(*seq, 5);
+
+    RectMatrix<int> result(6, 6);
+    for (int i = 0; i < 6; i++)
+        result[5][i] = i + 1;
+
+    assert(matrix == result);
+}
+
+void RectMatrixTests::addColumnTest()
+{
+    int list[5] = {1, 2, 3, 4, 5};
+    RectMatrix<int> matrix(5, 6);
+    Sequence<int>* seq = new ArraySequence<int>(list, 5);
+    matrix.addColumn(*seq, 6);
+
+    RectMatrix<int> result(5, 7);
+    for (int i = 0; i < 5; i++)
+        result[i][6] = i + 1;
+
+    assert(matrix == result);
+}
+
+void RectMatrixTests::popStringTest()
+{
+    int list[6] = {1, 2, 3, 4, 5, 6};
+    RectMatrix<int> matrix(5, 6);
+    for (int i = 0; i < 6; i++)
+        matrix[4][i] = i + 1;
+
+    Sequence<int>* seq = new ArraySequence<int>(list, 6);
+
+    Sequence<int>* result = matrix.popString(4);
+
+    assert(*result == *seq);
+}
+
+void RectMatrixTests::popColumnTest()
+{
+    int list[5] = {1, 2, 3, 4, 5};
+    RectMatrix<int> matrix(5, 6);
+    for (int i = 0; i < 5; i++)
+        matrix[i][0] = i + 1;
+
+    Sequence<int>* seq = new ArraySequence<int>(list, 5);
+
+    Sequence<int>* result = matrix.popColumn(0);
+
+    assert(*result == *seq);
+}
+
+void RectMatrixTests::swapStringTest()
+{
+    RectMatrix<int> matrix(5, 6);
+    for (int i = 0; i < 6; i++)
+        matrix[4][i] = i + 1;
+
+    RectMatrix<int> result(5, 6);
+    for (int i = 0; i < 6; i++)
+        result[3][i] = i + 1;
+
+
+    matrix.swapStrings(3, 4);
+
+    assert(result == matrix);
+}
+
+void RectMatrixTests::swapColumnsTest()
+{
+    RectMatrix<int> matrix(5, 6);
+    for (int i = 0; i < 5; i++)
+        matrix[i][0] = i + 1;
+
+    RectMatrix<int> result(5, 6);
+    for (int i = 0; i < 5; i++)
+        result[i][1] = i + 1;
+
+    matrix.swapColumns(0, 1);
+    assert(result == matrix);
+}
+
+void RectMatrixTests::transposeTest()
+{
+    RectMatrix<int> matrix(5, 6);
+    for (int i = 0; i < 5; i++)
+        matrix[i][0] = i + 1;
+
+    matrix = matrix.transpose();
+
+    RectMatrix<int> result(6, 5);
+    for (int i = 0; i < 5; i++)
+        result[0][i] = i + 1;
+
+    assert(result == matrix);
+}
+
+void RectMatrixTests::matrixMultiplyTest()
+{
+    RectMatrix<int> matrix(2, 3);
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            matrix[i][j] = i + j;
+
+    RectMatrix<int> result(2, 2);
+    result[0][0] = 5; result[0][1] = 8; result[1][0] = 8; result[1][1] = 14;
+
+    matrix = matrix * matrix.transpose();
+    assert(result == matrix);
+}
+
+
 void RectMatrixTests::allTestsTogether()
 {
     constructorFromHeightAndWidthTest();
@@ -106,6 +231,14 @@ void RectMatrixTests::allTestsTogether()
     oneEqualAnotherRvalueReferenceTest();
     sumTest();
     scalarMultiplyTest();
+    addStringTest();
+    addColumnTest();
+    popStringTest();
+    popColumnTest();
+    swapStringTest();
+    swapColumnsTest();
+    transposeTest();
+    matrixMultiplyTest();
 
 }
 

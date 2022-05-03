@@ -32,7 +32,7 @@ public:
     void resize(int new_Size);
     T* begin();
     T* end();
-    T pop(int index);
+    T&& pop(int index);
     void print() const;
 
 };
@@ -227,7 +227,7 @@ template <class T>
 T* DynamicArray<T>::end(){ return &m_Data[m_Size]; }
 
 template <class T>
-T DynamicArray<T>::pop(int index)
+T&& DynamicArray<T>::pop(int index)
 {
     if (m_Size == 0)
         throw Errors(Errors::ZERO_SIZE_ERROR);
@@ -235,7 +235,7 @@ T DynamicArray<T>::pop(int index)
     if (index >= m_Size || index < 0)
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
-    T ans = m_Data[index];
+    T* ans = new T(m_Data[index]);
 
     T* result_Data = new T[m_Capacity - 1]();
 
@@ -249,7 +249,7 @@ T DynamicArray<T>::pop(int index)
     m_Capacity -= 1;
     delete m_Data;
     m_Data = result_Data;
-    return ans;
+    return std::move(*ans);
 }
 
 template <class T>
