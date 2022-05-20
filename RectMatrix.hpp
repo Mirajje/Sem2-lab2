@@ -11,7 +11,6 @@ private:
     Sequence<Sequence<T>* >* m_Data;
     int m_Height = 0;
     int m_Width = 0;
-
     void deleteData();
 
 public:
