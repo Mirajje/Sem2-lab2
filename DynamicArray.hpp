@@ -5,23 +5,91 @@
 #include "Errors.h"
 
 template <class T>
-class DynamicArray{
+class ArrayIterator
+{
+public:
+    ArrayIterator(T* ptr)
+        : m_Ptr(ptr){}
+
+    ArrayIterator& operator++()
+    {
+        m_Ptr ++;
+        return *this;
+    }
+
+    ArrayIterator operator++(int)
+    {
+        ArrayIterator<T> temp = *this;
+        ++(*this);
+        return temp;
+    }
+
+    ArrayIterator& operator--()
+    {
+        m_Ptr --;
+        return *this;
+    }
+
+    ArrayIterator operator--(int)
+    {
+        ArrayIterator<T> temp = *this;
+        --(*this);
+        return temp;
+    }
+
+    ArrayIterator& operator =(const ArrayIterator<T>& other)
+    {
+        if (this != &other)
+            m_Ptr = other.m_Ptr;
+        return *this;
+    }
+
+    bool operator ==(const ArrayIterator<T>& other) const
+    {
+        return (m_Ptr == other.m_Ptr);
+    }
+
+    bool operator !=(const ArrayIterator<T>& other) const
+    {
+        return (m_Ptr != other.m_Ptr);
+    }
+
+    T& operator*()
+    {
+        return *m_Ptr;
+    }
+
+private:
+    T* m_Ptr;
+
+};
+
+template <class T>
+class DynamicArray
+{
 private:
     T* m_Data = nullptr;
     int m_Size = 0;
     int m_Capacity = 0;
 
 public:
+    using Iterator = ArrayIterator<T>;
+
+public:
     DynamicArray();
     explicit DynamicArray(int size);
     DynamicArray(T* items, int count);
+    DynamicArray(const std::initializer_list<T>& list);
     DynamicArray(const DynamicArray<T>& other);
     DynamicArray(DynamicArray<T>&& other) noexcept;
     ~DynamicArray();
 
 public:
+    Iterator begin();
+    Iterator end();
     T& operator[](int index);
     DynamicArray<T>& operator=(const DynamicArray<T>& other);
+    DynamicArray<T>& operator=(const std::initializer_list<T>& list);
     DynamicArray<T>& operator=(DynamicArray<T>&& other) noexcept;
     bool operator ==(const DynamicArray<T>&);
 
@@ -30,8 +98,6 @@ public:
     int getSize() const;
     void set(int index, const T& value);
     void resize(int new_Size);
-    T* begin();
-    T* end();
     T&& pop(int index);
     void print() const;
 
@@ -79,6 +145,17 @@ DynamicArray<T>::DynamicArray(const DynamicArray<T>& other)
 }
 
 template <class T>
+DynamicArray<T>::DynamicArray(const std::initializer_list<T>& list)
+{
+    m_Size = list.size();
+    m_Capacity = m_Size;
+    m_Data = new T[m_Size];
+
+    for (int i = 0; i < m_Size; i++)
+        m_Data[i] = list.begin()[i];
+}
+
+template <class T>
 DynamicArray<T>::DynamicArray(DynamicArray<T>&& other) noexcept
 {
     m_Size = other.m_Size;
@@ -94,6 +171,18 @@ template <class T>
 DynamicArray<T>::~DynamicArray()
 {
     delete[] m_Data;
+}
+
+template <class T>
+ArrayIterator<T> DynamicArray<T>::begin()
+{
+    return Iterator(m_Data);
+}
+
+template <class T>
+ArrayIterator<T> DynamicArray<T>::end()
+{
+    return Iterator(&m_Data[m_Size]);
 }
 
 template <class T>
@@ -121,6 +210,15 @@ DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& other)
             m_Data[i] = other.m_Data[i];
     }
 
+    return *this;
+}
+
+template <class T>
+DynamicArray<T>& DynamicArray<T>::operator=(const std::initializer_list<T>& list)
+{
+    this->resize(list.size());
+    for (int i = 0; i < m_Size; i++)
+        m_Data[i] = list.begin()[i];
     return *this;
 }
 
@@ -219,12 +317,6 @@ void DynamicArray<T>::resize(int new_Size)
     }
     m_Size = new_Size;
 }
-
-template <class T>
-T* DynamicArray<T>::begin(){ return m_Data; }
-
-template <class T>
-T* DynamicArray<T>::end(){ return &m_Data[m_Size]; }
 
 template <class T>
 T&& DynamicArray<T>::pop(int index)

@@ -54,7 +54,6 @@ RectMatrix<T>&& operator *(int multiplier, const RectMatrix<T>& matrix);
 template<class T>
 RectMatrix<T>&& operator *(const RectMatrix<T>& matrix1, const RectMatrix<T>& matrix2);
 
-
 template <class T>
 void RectMatrix<T>::deleteData()
 {

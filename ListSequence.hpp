@@ -5,15 +5,80 @@
 #include "Sequence.h"
 
 template <class T>
+class ListSequenceIterator
+{
+public:
+    ListSequenceIterator(const ListIterator<T>& it)
+            : m_It(it){}
+
+    ListSequenceIterator& operator++()
+    {
+        m_It ++;
+        return *this;
+    }
+
+    ListSequenceIterator operator++(int)
+    {
+        ArraySequenceIterator<T> temp = *this;
+        ++(*this);
+        return temp;
+    }
+
+    ListSequenceIterator& operator--()
+    {
+        m_It --;
+        return *this;
+    }
+
+    ListSequenceIterator operator--(int)
+    {
+        ArraySequenceIterator<T> temp = *this;
+        --(*this);
+        return temp;
+    }
+
+    ListSequenceIterator& operator =(const ListSequenceIterator<T>& other)
+    {
+        if (this != &other)
+            m_It = other.m_It;
+        return *this;
+    }
+
+    bool operator ==(const ListSequenceIterator<T>& other) const
+    {
+        return (m_It == other.m_It);
+    }
+
+    bool operator !=(const ListSequenceIterator<T>& other) const
+    {
+        return (m_It != other.m_It);
+    }
+
+    T& operator*()
+    {
+        return *m_It;
+    }
+
+private:
+
+    ListIterator<T> m_It;
+
+};
+
+template <class T>
 class ListSequence : public Sequence<T>
 {
 private:
     LinkedList<T>* m_List;
 
 public:
+    using Iterator = ListSequenceIterator<T>;
+
+public:
     ListSequence();
     explicit ListSequence(int count);
     ListSequence(T* items, int count);
+    ListSequence(const std::initializer_list<T>& list);
     explicit ListSequence(const LinkedList<T>& other);
     explicit ListSequence(LinkedList<T>&& other);
     ListSequence(const ListSequence<T>& other);
@@ -29,7 +94,10 @@ public:
     int find(const T& item) const;
 
 public:
+    Iterator begin();
+    Iterator end();
     T& operator[](int index);
+    ListSequence<T>& operator =(const std::initializer_list<T>& list);
     ListSequence<T>& operator =(const Sequence<T>& other);
     bool operator ==(const Sequence<T>& other) const;
 
@@ -66,6 +134,12 @@ template <class T>
 ListSequence<T>::ListSequence(T* items, int count)
 {
     m_List = new LinkedList<T>(items, count);
+}
+
+template <class T>
+ListSequence<T>::ListSequence(const std::initializer_list<T>& list)
+{
+    m_List = new LinkedList<T>(list);
 }
 
 template <class T>
@@ -137,6 +211,18 @@ int ListSequence<T>::find(const T& item) const
 }
 
 template <class T>
+ListSequenceIterator<T> ListSequence<T>::begin()
+{
+    return Iterator(m_List->begin());
+}
+
+template <class T>
+ListSequenceIterator<T> ListSequence<T>::end()
+{
+    return Iterator(m_List->end());
+}
+
+template <class T>
 T& ListSequence<T>::operator[](int index)
 {
     return (*m_List)[index];
@@ -153,6 +239,14 @@ ListSequence<T>& ListSequence<T>::operator =(const Sequence<T>& other)
         for (int i = 0; i < other.getLength(); i++)
             m_List->append(other.get(i));
     }
+    return *this;
+}
+
+template <class T>
+ListSequence<T>& ListSequence<T>::operator =(const std::initializer_list<T>& list)
+{
+    (*m_List) = list;
+
     return *this;
 }
 

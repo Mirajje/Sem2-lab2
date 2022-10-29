@@ -9,10 +9,10 @@
 
 void tests()
 {
-    LinkedListTests::allTestsTogether();
+    /*LinkedListTests::allTestsTogether();
     ListSequenceTests::allTestsTogether();
     DynamicArrayTests::allTestsTogether();
-    ArraySequenceTests::allTestsTogether();
+    ArraySequenceTests::allTestsTogether();*/
     RectMatrixTests::allTestsTogether();
 }
 

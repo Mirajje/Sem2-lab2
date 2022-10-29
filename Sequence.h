@@ -3,6 +3,24 @@
 
 #include <iostream>
 
+// Does not work
+
+/*template <class T>
+class SequenceIterator
+{
+    virtual SequenceIterator& operator++() = 0;
+    virtual SequenceIterator&& operator++(int) = 0;
+    virtual SequenceIterator& operator--() = 0;
+    virtual SequenceIterator&& operator--(int) = 0;
+    //virtual SequenceIterator& operator =(const SequenceIterator<T>& other);
+    //virtual bool operator ==(const SequenceIterator<T>& other) const = 0;
+    //virtual bool operator !=(const SequenceIterator<T>& other) const = 0;
+    virtual T& operator*() = 0;
+
+};*/
+
+// Does not work
+
 template <class T> class Sequence;
 template <class T> std::ostream& operator<<(std::ostream& out, const Sequence<T>& seq);
 
@@ -21,6 +39,7 @@ public:
 public:
     virtual T& operator[](int index) = 0;
     virtual Sequence<T>& operator =(const Sequence<T>& other) = 0;
+    virtual Sequence<T>& operator =(const std::initializer_list<T>&) = 0;
     virtual bool operator ==(const Sequence<T>& other) const = 0;
 
 public:

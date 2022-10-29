@@ -3,6 +3,7 @@
 
 #include "Sequence_lib.h"
 #include <cassert>
+#include "LinkedListTests.hpp"
 
 class ArraySequenceTests
 {

@@ -16,4 +16,6 @@ int main()
     matrix = matrix.transpose();
     matrix.print();
 
+    Sequence<int>* seq = new ArraySequence<int>({1, 2, 3});
+    seq->print();
 }

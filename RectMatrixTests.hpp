@@ -197,7 +197,7 @@ void RectMatrixTests::transposeTest()
     for (int i = 0; i < 5; i++)
         matrix[i][0] = i + 1;
 
-    matrix = matrix.transpose();
+    matrix = std::move(matrix.transpose());
 
     RectMatrix<int> result(6, 5);
     for (int i = 0; i < 5; i++)

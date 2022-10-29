@@ -6,15 +6,78 @@
 #include "Errors.h"
 
 template <class T>
+class ArraySequenceIterator
+{
+public:
+    ArraySequenceIterator(const ArrayIterator<T>& it)
+            : m_It(it){}
+
+    ArraySequenceIterator& operator++()
+    {
+        m_It ++;
+        return *this;
+    }
+
+    ArraySequenceIterator operator++(int)
+    {
+        ArraySequenceIterator<T> temp = *this;
+        ++(*this);
+        return temp;
+    }
+
+    ArraySequenceIterator& operator--()
+    {
+        m_It --;
+        return *this;
+    }
+
+    ArraySequenceIterator operator--(int)
+    {
+        ArraySequenceIterator<T> temp = *this;
+        --(*this);
+        return temp;
+    }
+
+    ArraySequenceIterator& operator =(const ArraySequenceIterator<T>& other)
+    {
+        if (this != &other)
+            m_It = other.m_It;
+        return *this;
+    }
+
+    bool operator ==(const ArraySequenceIterator<T>& other) const
+    {
+        return (m_It == other.m_It);
+    }
+
+    bool operator !=(const ArraySequenceIterator<T>& other) const
+    {
+        return (m_It != other.m_It);
+    }
+
+    T& operator*()
+    {
+        return *m_It;
+    }
+
+private:
+
+    ArrayIterator<T> m_It;
+
+};
+
+template <class T>
 class ArraySequence : public Sequence<T>
 {
 private:
     DynamicArray<T>* m_Array;
-
+public:
+    using Iterator = ArraySequenceIterator<T>;
 public:
     ArraySequence();
     explicit ArraySequence(int count);
     ArraySequence(T* items, int count);
+    ArraySequence(const std::initializer_list<T>& list);
     explicit ArraySequence(const DynamicArray<T>& other);
     explicit ArraySequence(DynamicArray<T>&& other);
     ArraySequence(const ArraySequence<T>& other);
@@ -30,8 +93,11 @@ public:
     int find(const T& item) const;
 
 public:
+    Iterator begin();
+    Iterator end();
     T& operator[](int index);
     ArraySequence<T>& operator =(const Sequence<T>& other);
+    ArraySequence<T>& operator=(const std::initializer_list<T>& list);
     bool operator ==(const Sequence<T>& other) const;
 
 public:
@@ -68,6 +134,13 @@ ArraySequence<T>::ArraySequence(T* items, int count)
 {
     m_Array = new DynamicArray<T>(items, count);
 }
+
+template <class T>
+ArraySequence<T>::ArraySequence(const std::initializer_list<T>& list)
+{
+    m_Array = new DynamicArray<T>(list);
+}
+
 
 template <class T>
 ArraySequence<T>::ArraySequence(const DynamicArray<T>& other)
@@ -142,6 +215,18 @@ int ArraySequence<T>::find(const T& item) const
 }
 
 template <class T>
+ArraySequenceIterator<T> ArraySequence<T>::begin()
+{
+    return Iterator(m_Array->begin());
+}
+
+template <class T>
+ArraySequenceIterator<T> ArraySequence<T>::end()
+{
+    return Iterator(m_Array->end());
+}
+
+template <class T>
 T& ArraySequence<T>::operator[](int index)
 {
     return (*m_Array)[index];
@@ -158,6 +243,13 @@ ArraySequence<T>& ArraySequence<T>::operator =(const Sequence<T>& other)
 
         *m_Array = result;
     }
+    return *this;
+}
+
+template <class T>
+ArraySequence<T>& ArraySequence<T>::operator=(const std::initializer_list<T>& list)
+{
+    (*m_Array) = list;
     return *this;
 }
 
@@ -192,11 +284,10 @@ Sequence<T>* ArraySequence<T>::getSubSequence(int startIndex, int endIndex) cons
     if (startIndex > endIndex || startIndex < 0 || endIndex >= m_Array->getSize())
         throw Errors(Errors::INDEX_OUR_OF_RANGE_ERROR);
 
-    DynamicArray<T> temp(endIndex - startIndex + 1);
+    auto* res = new ArraySequence<T>(endIndex - startIndex + 1);
     for (int i = startIndex; i < endIndex + 1; i++)
-        temp[i - startIndex] = (*m_Array)[i];
+        (*res)[i - startIndex] = (*m_Array)[i];
 
-    Sequence<T>* res = new ArraySequence<T>(temp);
     return res;
 }
 

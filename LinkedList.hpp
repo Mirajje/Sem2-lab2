@@ -12,6 +12,66 @@ struct Node
     Node* prev;
 };
 
+template <class T>
+class ListIterator
+{
+public:
+    ListIterator(Node<T>* ptr)
+            : m_Ptr(ptr){}
+
+    ListIterator& operator++()
+    {
+        m_Ptr = m_Ptr->next;
+        return *this;
+    }
+
+    ListIterator operator++(int)
+    {
+        ListIterator<T> temp = *this;
+        ++(*this);
+        return temp;
+    }
+
+    ListIterator& operator--()
+    {
+        m_Ptr = m_Ptr->prev;
+        return *this;
+    }
+
+    ListIterator operator--(int)
+    {
+        ListIterator<T> temp = *this;
+        --(*this);
+        return temp;
+    }
+
+    ListIterator& operator =(const ListIterator<T>& other)
+    {
+        if (this != &other)
+            m_Ptr = other.m_Ptr;
+        return *this;
+    }
+
+    bool operator ==(const ListIterator<T>& other) const
+    {
+        return (m_Ptr == other.m_Ptr);
+    }
+
+    bool operator !=(const ListIterator<T>& other) const
+    {
+        return (m_Ptr != other.m_Ptr);
+    }
+
+    T& operator*()
+    {
+        return m_Ptr->value;
+    }
+
+private:
+    Node<T>* m_Ptr;
+
+};
+
 template<typename T>
 class LinkedList{
 private:
@@ -20,16 +80,23 @@ private:
     int m_Size = 0;
 
 public:
+    using Iterator = ListIterator<T>;
+
+public:
     LinkedList();
     explicit LinkedList(int count);
     LinkedList(T* items, int count);
+    LinkedList(const std::initializer_list<T>& list);
     LinkedList(const LinkedList& other);
     LinkedList(LinkedList&& other) noexcept;
     ~LinkedList();
 
 public:
+    Iterator begin();
+    Iterator end();
     T& operator[](int index);
     LinkedList& operator=(const LinkedList& other);
+    LinkedList& operator=(const std::initializer_list<T>& list);
     LinkedList& operator=(LinkedList&& other) noexcept;
     bool operator ==(const LinkedList& other) const;
 
@@ -64,6 +131,7 @@ LinkedList<T>::LinkedList(int count)
 
     if (count > 0)
         m_Head = new Node<T>;
+
     Node<T> *current = m_Head;
     Node<T> *previous = nullptr;
 
@@ -78,7 +146,8 @@ LinkedList<T>::LinkedList(int count)
             current = current->next;
         }
     }
-    if (current != nullptr){
+    if (current != nullptr)
+    {
         m_Tail = current;
         m_Tail->next = nullptr;
     }
@@ -116,6 +185,33 @@ LinkedList<T>::LinkedList(T* items, int count)
         m_Tail->next = nullptr;
     }
     m_Size = count;
+}
+
+template <class T>
+LinkedList<T>::LinkedList(const std::initializer_list<T>& list)
+{
+    m_Size = list.size();
+    if (m_Size > 0)
+        m_Head = new Node<T>;
+    Node<T> *current = m_Head;
+    Node<T> *previous = nullptr;
+
+    for (int i = 0; i < m_Size; i++)
+    {
+        current->value = list.begin()[i];
+        current->prev = previous;
+        if (i != m_Size - 1)
+        {
+            previous = current;
+            current->next = new Node<T>;
+            current = current->next;
+        }
+    }
+    if (current != nullptr)
+    {
+        m_Tail = current;
+        m_Tail->next = nullptr;
+    }
 }
 
 template <class T>
@@ -174,6 +270,18 @@ LinkedList<T>::~LinkedList()
         }
         delete current;
     }
+}
+
+template <class T>
+ListIterator<T> LinkedList<T>::begin()
+{
+    return Iterator(m_Head);
+}
+
+template <class T>
+ListIterator<T> LinkedList<T>::end()
+{
+    return Iterator(nullptr);
 }
 
 template <class T>
@@ -240,6 +348,28 @@ LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other)
 
     }
 
+    return *this;
+}
+
+template <class T>
+LinkedList<T>& LinkedList<T>::operator=(const std::initializer_list<T>& list)
+{
+    Node<T>* current;
+    current = m_Head;
+    for (int i = 0; i < list.size(); i++)
+    {
+        if (current == nullptr)
+        {
+            this->append(list.begin()[i]);
+            continue;
+        }
+
+        current->value = list.begin()[i];
+        m_Tail = current;
+        current = current->next;
+    }
+    m_Tail->next = nullptr;
+    m_Size = list.size();
     return *this;
 }
 
